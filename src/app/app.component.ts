@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-//import { TitleComponent } from './components/title/title.component';
+
 import { NavbarComponent } from './components/navbar/navbar.component';
+
 
 @Component({
   selector: 'app-root',
