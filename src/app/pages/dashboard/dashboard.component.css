@@ -1,0 +1,48 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.content-wrapper {
+  
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.dashboard-section {
+  flex: 2;
+}
+
+.calendar-section {
+  flex: 1;
+}
+
+.booking-section {
+  width: 100%;
+}
+
+.recommendations-section {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .dashboard-row {
+    flex-direction: column;
+  }
+  
+  .main-content {
+    padding: 10px;
+  }
+}

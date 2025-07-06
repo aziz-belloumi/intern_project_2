@@ -1,0 +1,54 @@
+<div class="login-container">
+  <form #signupForm="ngForm">
+    <h2>Sign Up</h2>
+
+    <div class="name-group">
+      <input
+        class="form-input half-width"
+        type="text"
+        name="firstName"
+        placeholder="First Name"
+        required
+        ngModel
+      />
+
+      <input
+        class="form-input half-width"
+        type="text"
+        name="lastName"
+        placeholder="Last Name"
+        required
+        ngModel
+      />
+    </div>
+
+    <input
+      class="form-input"
+      type="tel"
+      name="phone"
+      placeholder="Phone Number"
+      required
+      ngModel
+    />
+
+    <input
+      class="form-input"
+      type="email"
+      name="email"
+      placeholder="Email"
+      required
+      ngModel
+    />
+
+    <input
+      class="form-input"
+      type="password"
+      name="password"
+      placeholder="Password"
+      required
+      ngModel
+    />
+
+    <button type="submit" [disabled]="signupForm.invalid">Register</button>
+  </form>
+</div>

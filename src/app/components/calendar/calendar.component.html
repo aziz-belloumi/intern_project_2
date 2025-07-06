@@ -1,0 +1,51 @@
+<div class="calendar-widget">
+  <h2 class="section-title">Calendar</h2>
+  
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <button class="nav-button" (click)="previousMonth()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <div class="month-year">
+        <span class="month">{{ currentMonth }}</span>
+        <span class="year">{{ currentYear }}</span>
+      </div>
+      
+      <button class="nav-button" (click)="nextMonth()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="calendar-body">
+      <div class="weekdays">
+        <div class="weekday">Su</div>
+        <div class="weekday">Mo</div>
+        <div class="weekday">Tu</div>
+        <div class="weekday">We</div>
+        <div class="weekday">Th</div>
+        <div class="weekday">Fr</div>
+        <div class="weekday">Sa</div>
+      </div>
+
+      <div class="days-grid">
+        <!-- Empty cells for days before first day of month -->
+        <div *ngFor="let empty of [].constructor(firstDayOfMonth); let i = index" 
+             class="day-cell empty"></div>
+        
+        <!-- Days of the month -->
+        <div *ngFor="let day of daysInMonth" 
+             class="day-cell" 
+             [class.today]="isToday(day)"
+             [class.selected]="isSelected(day)"
+             (click)="onDateClick(day)">
+          {{ day }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+.user-info-card {
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item label {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+
+.info-item span {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.info-item a {
+  color: #6c63ff;
+  text-decoration: none;
+}
+
+.info-item a:hover {
+  text-decoration: underline;
+}

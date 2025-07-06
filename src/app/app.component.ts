@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-
-import { NavbarComponent } from './components/navbar/navbar.component';
-
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [ProfileComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

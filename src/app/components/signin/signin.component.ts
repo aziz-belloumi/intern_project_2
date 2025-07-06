@@ -14,13 +14,13 @@ import {Router} from "@angular/router";
 export class SigninComponent {
   // email = '' ;
   // password = '';
-  //  constructor(private authService: AuthService) {}
+  // constructor(private authService: AuthService,private router: Router ) {}
   // onSubmit(): void{
   //    this.authService.signIn(this.email,this.password).subscribe({
-  //      //next: result => {
+  //      next: result => {
   //        //localStorage.setItem('token', result.accessToken);
-  //        //this.router.navigate(['/home']);
-  //      //},
+  //        this.router.navigate(['/home']);
+  //      },
   //      error: () => alert("Failed to login")
   //    });
   // }

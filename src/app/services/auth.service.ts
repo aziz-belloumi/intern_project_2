@@ -14,6 +14,7 @@ export class AuthService {
   signIn(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/signin`, { email, password });
   }
+  signUp(email: string, password: string) {}
 
   // Logout method (client-side only for JWT)
   logOut(): void {
