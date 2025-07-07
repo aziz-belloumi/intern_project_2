@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ProfileComponent],
+  imports: [NavbarComponent,RouterOutlet],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

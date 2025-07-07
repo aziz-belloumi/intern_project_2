@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SigninComponent {
+export class SigninPageComponent {
   // email = '' ;
   // password = '';
   // constructor(private authService: AuthService,private router: Router ) {}

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from 'src/app/components/header/header.component';
-import { DashboardCardComponent } from 'src/app/components/dashboard-card/dashboard-card.component';
-import { CalendarComponent } from 'src/app/components/calendar/calendar.component';
-import { BookResourceComponent } from 'src/app/components/book-resource/book-resource.component';
-import { AiRecommendationsComponent } from 'src/app/components/ai-recommendations/ai-recommendations.component';
+import { HeaderComponent } from 'src/app/components/dashboard-components/header/header.component';
+import { DashboardCardComponent } from 'src/app/components/dashboard-components/dashboard-card/dashboard-card.component';
+import { CalendarComponent } from 'src/app/components/dashboard-components/calendar/calendar.component';
+import { BookResourceComponent } from 'src/app/components/dashboard-components/book-resource/book-resource.component';
+import { AiRecommendationsComponent } from 'src/app/components/dashboard-components/ai-recommendations/ai-recommendations.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +20,7 @@ import { AiRecommendationsComponent } from 'src/app/components/ai-recommendation
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardPageComponent {
   constructor() { }
 
   onBookResource() {

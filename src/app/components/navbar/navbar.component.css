@@ -15,7 +15,7 @@ body {
 
 /* Left section (title) */
 .nav-left {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #002eff;
 }
@@ -39,7 +39,6 @@ body {
 
 .nav-links a:hover {
   color: #002eff;
-  border-bottom: 2px solid #002eff;
 }
 
 /* Active link styling */
@@ -53,7 +52,7 @@ body {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 
@@ -64,7 +63,7 @@ body {
   padding: 0.4rem 1.2rem;
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -90,4 +89,26 @@ body {
   .nav-actions {
     margin-top: 1rem;
   }
+}
+.active-link {
+  position: relative;
+  color: #3f51b5; /* Your active color */
+  font-weight: bold;
+}
+
+/* Optional: Add an underline indicator */
+.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3f51b5;
+  animation: underline 0.3s ease;
+}
+
+@keyframes underline {
+  from { width: 0; }
+  to { width: 100%; }
 }

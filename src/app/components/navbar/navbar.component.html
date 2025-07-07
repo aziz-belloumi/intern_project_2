@@ -1,16 +1,28 @@
 <nav class="navbar">
   <div class="nav-left">
-    <app-title></app-title>
+    <p>BookingSystem</p>
   </div>
-
   <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Services</a></li>
-    <li><a href="#">Contact</a></li>
+    <li>
+      <a routerLink="/home" 
+         routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{exact: true}">Home</a>
+    </li>
+    <li>
+      <a routerLink="/about" 
+         routerLinkActive="active-link">About</a>
+    </li>
+    <li>
+      <a routerLink="/services" 
+         routerLinkActive="active-link">Services</a>
+    </li>
+    <li>
+      <a routerLink="/contact" 
+         routerLinkActive="active-link">Contact</a>
+    </li>
   </ul>
 
   <div class="nav-actions">
-    <button type="button" class="get-started-button">Get Started</button>
+    <button type="button" class="get-started-button" (click)="onSigninClick()">Sign In</button>
   </div>
 </nav>
