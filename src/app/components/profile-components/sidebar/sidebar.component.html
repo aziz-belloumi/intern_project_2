@@ -7,8 +7,15 @@
   </div>
 
   <nav class="nav-links">
-    <button class="nav-button">Dashboard</button>
-    <button class="nav-button">Insights</button>
-    <button class="nav-button">Settings</button>
-  </nav>
+  <button class="nav-button" (click)="navigateTo('dashboard')">
+    <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+  </button>
+  <button class="nav-button" (click)="navigateTo('dashboard')">
+    <a routerLink="/dashboard" routerLinkActive="active-link">Insights</a>
+  </button>
+  <button class="nav-button" (click)="navigateTo('dashboard')">
+    <a routerLink="/dashboard" routerLinkActive="active-link">Settings</a>
+  </button>
+</nav>
+
 </div>

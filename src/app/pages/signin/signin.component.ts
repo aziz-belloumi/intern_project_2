@@ -12,16 +12,18 @@ import {Router} from "@angular/router";
   styleUrls: ['./signin.component.css']
 })
 export class SigninPageComponent {
-  // email = '' ;
-  // password = '';
-  // constructor(private authService: AuthService,private router: Router ) {}
-  // onSubmit(): void{
-  //    this.authService.signIn(this.email,this.password).subscribe({
-  //      next: result => {
-  //        //localStorage.setItem('token', result.accessToken);
-  //        this.router.navigate(['/home']);
-  //      },
-  //      error: () => alert("Failed to login")
-  //    });
-  // }
+   email = '' ;
+   password = '';
+   constructor(private authService: AuthService,private router: Router ) {}
+   onSubmit(): void{
+      this.authService.signIn({email: this.email,password: this.password}).subscribe({
+        
+        next: (res) => {
+          alert(res.message);
+          //localStorage.setItem('token', result.accessToken);
+          this.router.navigate(['/dashboard']);
+        },
+        error: () => alert("Failed to login")
+      });
+   }
 }

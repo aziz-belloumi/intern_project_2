@@ -18,6 +18,6 @@ import { BookingHistoryCardComponent } from 'src/app/components/profile-componen
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfilePageComponent {
 
 }
