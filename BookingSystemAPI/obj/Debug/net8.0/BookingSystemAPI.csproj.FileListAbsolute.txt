@@ -508,3 +508,4 @@ C:\Users\bello\Desktop\back-end\BookingSystemAPI\obj\Debug\net8.0\refint\Booking
 C:\Users\bello\Desktop\back-end\BookingSystemAPI\obj\Debug\net8.0\BookingSystemAPI.pdb
 C:\Users\bello\Desktop\back-end\BookingSystemAPI\obj\Debug\net8.0\BookingSystemAPI.genruntimeconfig.cache
 C:\Users\bello\Desktop\back-end\BookingSystemAPI\obj\Debug\net8.0\ref\BookingSystemAPI.dll
+C:\Users\bello\Desktop\back-end\BookingSystemAPI\obj\Debug\net8.0\BookingSystemAPI.sourcelink.json

@@ -26,9 +26,11 @@ namespace UserRoleManagementApi.Helpers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name , $"{user.FirstName} {user.LastName}".Trim()),
+                new Claim("id", user.Id.ToString()),
+                new Claim("email", user.Email),
+                new Claim("firstName" , user.FirstName),
+                new Claim("lastName", user.LastName),
+                new Claim("phoneNumber", user.PhoneNumber.ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
