@@ -17,10 +17,9 @@ export class SigninPageComponent {
    constructor(private authService: AuthService,private router: Router ) {}
    onSubmit(): void{
       this.authService.signIn({email: this.email,password: this.password}).subscribe({
-        
+
         next: (res) => {
-          alert(res.message);
-          //localStorage.setItem('token', result.accessToken);
+          //loading page logic
           this.router.navigate(['/dashboard']);
         },
         error: () => alert("Failed to login")

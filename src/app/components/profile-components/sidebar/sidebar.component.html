@@ -1,21 +1,21 @@
-<div class="sidebar">
+<div class="sidebar" *ngIf="user">
   <div class="profile">
     <img src="https://img.freepik.com/vecteurs-libre/ninja-mignon-shuriken-epee-dessin-anime-vecteur-icone-illustration-personnes-vacances-plat-isole_138676-9389.jpg" class="avatar" alt="User Avatar" />
     <div class="profile-details">
-      <h3 class="name">anonymos</h3>
+      <h3 class="name">{{ user.firstName}} {{ user.lastName}}</h3>
     </div>
   </div>
 
   <nav class="nav-links">
-  <button class="nav-button" (click)="navigateTo('dashboard')">
-    <a routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
-  </button>
   <button class="nav-button" (click)="navigateTo('dashboard')">
     <a routerLink="/dashboard" routerLinkActive="active-link">Insights</a>
   </button>
   <button class="nav-button" (click)="navigateTo('dashboard')">
     <a routerLink="/dashboard" routerLinkActive="active-link">Settings</a>
   </button>
+    <button class="nav-button" (click)="navigateTo('home')">
+      <a routerLink="/home" routerLinkActive="active-link">Log Out</a>
+    </button>
 </nav>
 
 </div>

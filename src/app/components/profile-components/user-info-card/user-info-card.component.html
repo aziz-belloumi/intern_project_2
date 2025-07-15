@@ -1,21 +1,21 @@
-<div class="card user-info-card">
+<div class="card user-info-card" *ngIf="user">
   <h3 class="card-title">User Information</h3>
   <div class="info-grid">
     <div class="info-item">
       <label>Email:</label>
-      <span><a href="mailto:jessica.thompson@example.com">jessica.thompson.com</a></span>
+      <span><a href="mailto:belloumiaziz1@gmail.com">{{ user.email }}</a></span>
     </div>
     <div class="info-item">
       <label>Phone:</label>
-      <span>+1 234 567 8901</span>
+      <span>{{ user.phoneNumber }}</span>
     </div>
     <div class="info-item">
-      <label>Department:</label>
-      <span>Facilities Management</span>
+      <label>Work in:</label>
+      <span>empty</span>
     </div>
     <div class="info-item">
       <label>Location:</label>
-      <span>New York Office</span>
+      <span>empty</span>
     </div>
   </div>
 </div>

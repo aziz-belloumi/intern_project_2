@@ -10,6 +10,7 @@ import { SignupPageComponent } from './pages/signup/signup.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout/auth-layout.component';
 import { ProfilePageComponent } from './pages/profile/profile.component';
+import {DashboardLayoutComponent} from "./layouts/dashboard-layout/dashboard-layout/dashboard-layout.component";
 
 
 export const routes: Routes = [
@@ -31,12 +32,17 @@ export const routes: Routes = [
     children: [
       { path: 'signin', component: SigninPageComponent },
       { path: 'signup', component: SignupPageComponent },
-      { path: 'dashboard', component: DashboardPageComponent },
-      { path: 'profile', component: ProfilePageComponent }, // Assuming profile is part of the dashboard
-      // no navbar
     ]
   },
-  { path: '**', redirectTo: 'signin' }
+  {
+    path: '',
+    component: DashboardLayoutComponent,  // ← New layout with navbar
+    children: [
+      { path: 'dashboard', component: DashboardPageComponent },
+      { path: 'profile', component: ProfilePageComponent },
+    ]
+  },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
