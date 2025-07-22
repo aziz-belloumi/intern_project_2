@@ -1,0 +1,44 @@
+[
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "Method": "LogOut",
+    "RelativePath": "api/Users/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "Method": "SignIn",
+    "RelativePath": "api/Users/signin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestBody",
+        "Type": "System.Text.Json.JsonElement",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "Method": "SignUp",
+    "RelativePath": "api/Users/signup",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "BookingSystem.Data.Models.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
