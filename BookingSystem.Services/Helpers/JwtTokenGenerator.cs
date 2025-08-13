@@ -31,7 +31,9 @@ namespace BookingSystem.Services.Helpers
                 new Claim("email", user.Email),
                 new Claim("firstName" , user.FirstName),
                 new Claim("lastName", user.LastName),
-                new Claim("phoneNumber", user.PhoneNumber.ToString())
+                new Claim("phoneNumber", user.PhoneNumber.ToString()),
+                new Claim("PreferredRoomIds", string.Join(",", user.PreferredRoomIds ?? new List<int>()))
+
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

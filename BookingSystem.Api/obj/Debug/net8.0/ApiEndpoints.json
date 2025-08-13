@@ -1,8 +1,119 @@
 [
   {
-    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "ContainingType": "BookingSystem.Api.Controllers.BookingsController",
+    "Method": "GetAllBookings",
+    "RelativePath": "api/Bookings/get-all-bookings-of-user",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingsController",
+    "Method": "GetBookingById",
+    "RelativePath": "api/Bookings/get-booking/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "CreateRoom",
+    "RelativePath": "api/Room/create-room",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newRoom",
+        "Type": "BookingSystem.Data.Models.Room",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "DeleteRoom",
+    "RelativePath": "api/Room/delete-room",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "EditRoom",
+    "RelativePath": "api/Room/edit-room",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedRoom",
+        "Type": "BookingSystem.Data.Models.Room",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "GetRooms",
+    "RelativePath": "api/Room/get-all-rooms",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "GetRoom",
+    "RelativePath": "api/Room/get-room",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.UserController",
     "Method": "LogOut",
-    "RelativePath": "api/Users/logout",
+    "RelativePath": "api/User/log-out",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -10,9 +121,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "ContainingType": "BookingSystem.Api.Controllers.UserController",
     "Method": "SignIn",
-    "RelativePath": "api/Users/signin",
+    "RelativePath": "api/User/sign-in",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -26,9 +137,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookingSystem.Api.Controllers.UsersController",
+    "ContainingType": "BookingSystem.Api.Controllers.UserController",
     "Method": "SignUp",
-    "RelativePath": "api/Users/signup",
+    "RelativePath": "api/User/sign-up",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

@@ -86,7 +86,6 @@ C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebasse
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\BookingS.309AE1F7.Up2Date
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\BookingSystem.Api.dll
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\refint\BookingSystem.Api.dll
@@ -175,3 +174,4 @@ C:\Users\bello\Desktop\back-end\BookingSystem.Api\bin\Debug\net8.0\ru\Microsoft.
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\bello\Desktop\back-end\BookingSystem.Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\bello\Desktop\back-end\BookingSystem.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -8,18 +8,18 @@ namespace BookingSystem.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : Controller
     {
         private readonly IUserService _userService;
 
-        public UsersController(IUserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
 
         // POST: api/Users/signup
-        [HttpPost("signup")]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp([FromBody] User user)
         {
             try
@@ -47,7 +47,7 @@ namespace BookingSystem.Api.Controllers
         }
 
         // POST: api/Users/signin
-        [HttpPost("signin")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] JsonElement requestBody)
         {
             var email = requestBody.GetProperty("email").GetString();
@@ -61,7 +61,7 @@ namespace BookingSystem.Api.Controllers
         }
 
         // POST: api/Users/logout
-        [HttpPost("logout")]
+        [HttpPost("log-out")]
         public async Task<IActionResult> LogOut()
         {
             await _userService.LogOutAsync();
