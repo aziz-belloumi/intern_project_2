@@ -1,0 +1,20 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {Router, RouterModule} from '@angular/router';
+import {MatIconModule} from "@angular/material/icon";
+import {AuthService} from "../../services/auth.service";
+
+@Component({
+  selector: 'app-sidebar',
+  standalone: true,
+  imports: [CommonModule, RouterModule ,MatIconModule],
+  templateUrl: 'sidebar.component.html',
+  styleUrls: ['sidebar.component.css']
+})
+export class SidebarComponent {
+  constructor(private router: Router, private authService: AuthService) { }
+  onLogOutClick() {
+    this.authService.logOut();
+    this.router.navigate(['/home'])
+  }
+}

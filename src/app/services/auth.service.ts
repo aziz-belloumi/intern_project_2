@@ -8,9 +8,15 @@ import {User} from "../models/user.model";
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5077/api/Users'; // Adjust port if needed
+  private apiUrl = 'http://localhost:5077/api/User';
 
   constructor(private http: HttpClient) { }
+
+  signUp(user: { email: string, password: string, phoneNumber: number, firstName: string, lastName: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/sign-up`, user);
+  }
+
+
 
   signIn(user: { email: string, password: string }): Observable<any> {
     const headers = new HttpHeaders({
@@ -18,7 +24,7 @@ export class AuthService {
     });
 
     return new Observable(observer => {
-      this.http.post<any>(`${this.apiUrl}/signin`, JSON.stringify(user), { headers })
+      this.http.post<any>(`${this.apiUrl}/sign-in`, JSON.stringify(user), { headers })
         .subscribe({
           next: (response) => {
             const token = response.token;
@@ -32,11 +38,6 @@ export class AuthService {
         });
     });
   }
-
-  signUp(user: { email: string, password: string, phoneNumber: number, firstName: string, lastName: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, user);
-  }
-
 
   getUserFromToken(): any {
     const token = localStorage.getItem('token');
@@ -53,10 +54,5 @@ export class AuthService {
 
   logOut(): void {
     localStorage.removeItem('token');
-  }
-
-  // Check if logged in , still some doughts about this method
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
   }
 }

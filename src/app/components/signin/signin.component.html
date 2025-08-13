@@ -1,0 +1,29 @@
+<div *ngIf="isLoading$ | async" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Sign In</h2>
+
+    <form [formGroup]="form"  (ngSubmit)="onSubmit()" *ngIf="!(isLoading$ | async)">
+      <input type="email" placeholder="Email Address" formControlName="email"  required />
+      <input type="password" placeholder="Password" formControlName="password" required />
+
+      <div class="options">
+        <label>
+          <input type="checkbox" />
+          Remember me
+        </label>
+        <a href="#">Forgot Password?</a>
+      </div>
+
+      <button type="submit" [disabled]="isLoading$ | async">Sign In</button>
+    </form>
+
+  </div>
+</div>
+
+<div *ngIf="error$ | async as error" class="error-msg">
+  {{ error }}
+</div>

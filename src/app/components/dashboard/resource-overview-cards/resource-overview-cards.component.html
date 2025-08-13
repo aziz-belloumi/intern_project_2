@@ -1,0 +1,26 @@
+<div class="resource-overview">
+  <h2 class="section-title">Resource Overview</h2>
+
+  <div class="carousel-container">
+    <button class="carousel-btn prev" (click)="scrollLeft()">&#10094;</button>
+
+    <div class="cards-wrapper" #cardsWrapper>
+      <div
+        *ngFor="let room of rooms"
+        class="resource-card"
+      >
+        <div class="card-icon">
+          <i>Room {{ room.id }}</i>
+        </div>
+
+        <div class="card-content">
+          <h3 class="card-title">capacity : {{ room.capacity }}</h3>
+          <div class="card-count">price per minute : {{ room.pricePerMinute }}</div>
+          <div class="card-subtitle">type of room : {{ room.roomType }}</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-btn next" (click)="scrollRight()">&#10095;</button>
+  </div>
+</div>

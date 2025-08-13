@@ -1,0 +1,42 @@
+<div class="sidebar">
+
+  <nav class="sidebar-nav">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>home</mat-icon></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a routerLink="/explore" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>explore</mat-icon></i>
+      <span>Explore</span>
+    </a>
+
+    <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>person</mat-icon></i>
+      <span>Profile</span>
+
+    </a>
+
+    <a routerLink="/add-room" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>add_box</mat-icon></i>
+      <span>Add Room</span>
+    </a>
+
+    <a routerLink="/equipment" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>desktop_windows</mat-icon></i>
+      <span>Equipment</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+      <i class="icon"><mat-icon>settings</mat-icon></i>
+      <span>Settings</span>
+    </a>
+
+    <button type="button" class="nav-item logout-btn" (click)="onLogOutClick()">
+      <i class="icon"><mat-icon>logout</mat-icon></i>
+      <span>Log out</span>
+    </button>
+  </div>
+</div>

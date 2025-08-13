@@ -1,0 +1,29 @@
+<header class="header">
+  <div class="header-left">
+    <h1>Welcome Back</h1>
+  </div>
+
+  <div class="header-center">
+    <div class="search-container">
+      <i class="search-icon"><mat-icon>search</mat-icon></i>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search resources..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch($event)"
+      >
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="header-btn notification-btn" (click)="showNotifications()">
+      <mat-icon>notifications</mat-icon>
+      <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+    </button>
+
+    <div class="user-profile" (click)="showProfile()">
+      <img src="https" class="user-avatar">
+    </div>
+  </div>
+</header>

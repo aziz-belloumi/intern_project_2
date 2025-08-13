@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fc;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  background-color: #f0f4ff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 320px;
+}
+
+.auth-card h2 {
+  text-align: left;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.auth-card .options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.auth-card .options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.auth-card .options a {
+  color: #666;
+  text-decoration: none;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 10px;
+  background-color: #0000FF;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background-color: #3647d7;
+}
+
+
+
+
+/* loading-overlay.css */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* high to appear above everything */
+}
+
+.spinner {
+  border: 6px solid #f3f3f3; /* light grey */
+  border-top: 6px solid #3498db; /* blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.error-msg {
+  color: red;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+
