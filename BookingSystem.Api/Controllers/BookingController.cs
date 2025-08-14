@@ -6,21 +6,21 @@ namespace BookingSystem.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BookingsController : ControllerBase
+    public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
 
-        public BookingsController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService)
         {
             _bookingService = bookingService;
         }
 
-        [HttpGet("get-all-bookings-of-user")]
-        public async Task<IActionResult> GetAllBookings([FromQuery] int userId)
+        [HttpGet("get-all-bookings-of-user-by-chunks")]
+        public async Task<IActionResult> GetAllBookings([FromQuery] int userId , [FromQuery] int lastBookingId)
         {
             try
             {
-                var bookings = await _bookingService.GetAllBookingsAsync(userId);
+                var bookings = await _bookingService.GetUserBookingsChunkAsync(userId, lastBookingId);
                 if (bookings != null && bookings.Any())
                 {
                     return Ok(bookings);
@@ -65,6 +65,33 @@ namespace BookingSystem.Api.Controllers
             if (!updated) return NotFound();
             return NoContent();
         }*/
+
+        [HttpGet("get-user-statistics")]
+        public async Task<IActionResult> GetUserStatistics([FromQuery] int userId)
+        {
+            try
+            {
+                var statistics = await _bookingService.GetUserStatisticsAsync(userId);
+                if (statistics == null || !statistics.Any())
+                {
+                    return BadRequest(new { message = "There is a problem in user statistics fetching" });
+                }
+                return Ok(statistics);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+        [HttpGet("get-recent-bookings")]
+        public async Task<IActionResult> GetRecentBookings([FromQuery] int userId)
+        {
+            var bookings = await _bookingService.GetRecentBookingsAsync(userId);
+            if (bookings == null) return NotFound();
+            return Ok(bookings);
+        }
+
     }
 
 }

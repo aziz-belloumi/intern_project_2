@@ -1,8 +1,45 @@
 [
   {
-    "ContainingType": "BookingSystem.Api.Controllers.BookingsController",
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
     "Method": "GetAllBookings",
-    "RelativePath": "api/Bookings/get-all-bookings-of-user",
+    "RelativePath": "api/Booking/get-all-bookings-of-user-by-chunks",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastBookingId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "GetBookingById",
+    "RelativePath": "api/Booking/get-booking/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "GetRecentBookings",
+    "RelativePath": "api/Booking/get-recent-bookings",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -16,17 +53,17 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BookingSystem.Api.Controllers.BookingsController",
-    "Method": "GetBookingById",
-    "RelativePath": "api/Bookings/get-booking/{id}",
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "GetUserStatistics",
+    "RelativePath": "api/Booking/get-user-statistics",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "userId",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

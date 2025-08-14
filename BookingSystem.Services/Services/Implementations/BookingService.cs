@@ -15,14 +15,53 @@ namespace BookingSystem.Services.Services.Implementations
             _context = context;
         }
 
-        public async Task<List<Booking>?> GetAllBookingsAsync(int userId)
+        public async Task<List<Object>?> GetUserBookingsChunkAsync(int userId, int? lastBookingId, int chunkSize = 1)
         {
             try
             {
-                return await _context.Bookings
-                .Where(b => b.UserId == userId)
-                .OrderByDescending(b => b.UpdatedAt ?? b.CreatedAt)
-                .ToListAsync();
+                IQueryable<Booking> query = _context.Bookings
+                    .Where(b => b.UserId == userId);
+
+                // Determine the timestamp to continue from
+                if (lastBookingId.HasValue && lastBookingId.Value > 0)
+                {
+                    var lastBooking = await _context.Bookings
+                        .Where(b => b.Id == lastBookingId.Value)
+                        .FirstOrDefaultAsync();
+
+                    if (lastBooking != null)
+                    {
+                        var lastDate = lastBooking.UpdatedAt ?? lastBooking.CreatedAt;
+                        query = query.Where(b => (b.UpdatedAt ?? b.CreatedAt) < lastDate);
+                    }
+                }
+                var bookings = await query
+                    .OrderByDescending(b => b.UpdatedAt ?? b.CreatedAt)
+                    .Take(chunkSize)
+                    .Select(b => new
+                    {
+                        b.Id,
+                        b.UserId,
+                        b.RoomId,
+                        b.Purpose,
+                        b.StartTime,
+                        b.EndTime,
+                        b.DurationMinutes,
+                        b.Attendees,
+                        b.IsPreferredRoom,
+                        b.IsPurposeCompatible,
+                        b.CapacityUtilization,
+                        b.TotalPrice,
+                        b.Status,
+                        b.CreatedAt,
+                        b.UpdatedAt
+                    })
+                .ToListAsync<object>();
+
+                if (bookings == null || !bookings.Any())
+                    return null;
+
+                return bookings;
             }
             catch (Exception)
             {
@@ -73,6 +112,92 @@ namespace BookingSystem.Services.Services.Implementations
             await _context.SaveChangesAsync();
             return true;
         }*/
+
+
+        public async Task<List<decimal>?> GetUserStatisticsAsync(int userId)
+        {
+            try
+            {
+                var bookings = await _context.Bookings
+                    .Where(b => b.UserId == userId && (b.Status == BookingStatus.Completed || b.Status == BookingStatus.Cancelled))
+                    .ToListAsync();
+
+                if (!bookings.Any())
+                    return null;
+
+                var totalBookings = bookings.Count;
+
+                // Most used room (only among completed bookings)
+                var completedBookings = bookings.Where(b => b.Status == BookingStatus.Completed).ToList();
+                int mostUsedRoomId = 0;
+                decimal totalSpent = 0;
+                decimal avgCapacityUtilization = 0;
+                int completedReservations = completedBookings.Count;
+
+                if (completedBookings.Any())
+                {
+                    mostUsedRoomId = completedBookings
+                        .GroupBy(b => b.RoomId)
+                        .OrderByDescending(g => g.Count())
+                        .Select(g => g.Key)
+                        .FirstOrDefault();
+
+                    totalSpent = completedBookings.Sum(b => b.TotalPrice);
+                    avgCapacityUtilization = (decimal)completedBookings.Average(b => b.CapacityUtilization);
+                }
+
+                return new List<decimal>{totalBookings, completedReservations, mostUsedRoomId,totalSpent,avgCapacityUtilization};
+            }
+            catch
+            {
+                return null;
+            }
+
+
+
+        }
+
+        public async Task<List<object>?> GetRecentBookingsAsync(int userId)
+        {
+            try
+            {
+                var bookings = await _context.Bookings
+                    .Where(b => b.UserId == userId)
+                    .OrderByDescending(b => b.UpdatedAt ?? b.CreatedAt)
+                    .Take(5)
+                    .Select(b => new
+                    {
+                        b.Id,
+                        b.UserId,
+                        b.RoomId,
+                        b.Purpose,
+                        b.StartTime,
+                        b.EndTime,
+                        b.DurationMinutes,
+                        b.Attendees,
+                        b.IsPreferredRoom,
+                        b.IsPurposeCompatible,
+                        b.CapacityUtilization,
+                        b.TotalPrice,
+                        b.Status,
+                        b.CreatedAt,
+                        b.UpdatedAt
+                    })
+                .ToListAsync<object>();
+
+                if (bookings == null || !bookings.Any())
+                    return null;
+
+                return bookings;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+
     }
 
 }

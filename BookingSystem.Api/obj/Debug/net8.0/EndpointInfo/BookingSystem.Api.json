@@ -5,10 +5,63 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Bookings/get-all-bookings-of-user": {
+    "/api/Booking/get-all-bookings-of-user-by-chunks": {
       "get": {
         "tags": [
-          "Bookings"
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "lastBookingId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Booking/get-booking/{id}": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Booking/get-user-statistics": {
+      "get": {
+        "tags": [
+          "Booking"
         ],
         "parameters": [
           {
@@ -27,16 +80,15 @@
         }
       }
     },
-    "/api/Bookings/get-booking/{id}": {
+    "/api/Booking/get-recent-bookings": {
       "get": {
         "tags": [
-          "Bookings"
+          "Booking"
         ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "userId",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
