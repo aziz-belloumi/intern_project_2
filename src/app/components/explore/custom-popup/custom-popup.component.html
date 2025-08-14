@@ -1,0 +1,61 @@
+<div
+  class="popup-overlay"
+  *ngIf="isVisible"
+  [@fadeInOut]="isVisible ? 'in' : 'out'"
+  (click)="onOverlayClick($event)">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3 class="popup-title">{{ roomType }}</h3>
+        <button class="popup-close-btn" (click)="close()">
+          {{ closeButtonText }}
+        </button>
+      </div>
+
+      <div class="popup-body">
+        <div class="room-image-section">
+          <div class="room-image-placeholder">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="image-text">Room Image</span>
+          </div>
+        </div>
+
+        <div class="room-details-section">
+          <div class="detail-row">
+            <span class="detail-label">Capacity:</span>
+            <span class="detail-value">{{ capacity }} people</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Location:</span>
+            <span class="detail-value">{{ location }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Price:</span>
+            <span class="detail-value">${{ pricePerMinute }}/min</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Amenities:</span>
+            <div class="amenities">
+                  <span class="amenity-tag" [class.available]="hasProjector">
+                    📽️ Projector
+                  </span>
+              <span class="amenity-tag" [class.available]="hasWhiteboard">
+                    📝 Whiteboard
+                  </span>
+            </div>
+          </div>
+
+          <div class="detail-row description-row">
+            <span class="detail-label">Description:</span>
+            <p class="detail-description">{{ description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

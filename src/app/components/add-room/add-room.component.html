@@ -1,1 +1,73 @@
-<p>add-room works!</p>
+<main class="main-content">
+  <div class="form-container">
+    <div class="form-header">
+      <h2 class="form-title">Add New Room</h2>
+      <p class="form-description">Fill in the details below to add a new room to your booking system</p>
+    </div>
+
+    <div class="success-message" *ngIf="successMessage">
+      Room has been successfully added to the system!
+    </div>
+
+    <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm)">
+      <div class="form-grid">
+        <!-- Room Capacity -->
+        <div class="form-group">
+          <label class="form-label required">Room Capacity</label>
+          <input type="number" class="form-input" name="capacity" ngModel required min="1" max="100" placeholder="e.g., 10">
+          <div class="form-hint">Maximum number of people the room can accommodate</div>
+        </div>
+
+        <!-- Room Type -->
+        <div class="form-group">
+          <label class="form-label required">Room Type</label>
+          <select class="form-select" name="roomType" ngModel required>
+            <option value="">Select room type...</option>
+            <option value="meeting">Meeting Room</option>
+            <option value="training">Training Room</option>
+            <option value="interview">Interview Room</option>
+            <option value="flex">Flexible Room</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Price Per Minute -->
+        <div class="form-group">
+          <label class="form-label required">Price Per Minute</label>
+          <div class="price-input-group">
+            <span class="currency-symbol">$</span>
+            <input type="number" class="form-input price-input" name="pricePerMinute" ngModel required step="0.01" min="0" placeholder="0.75">
+          </div>
+          <div class="form-hint">Cost per minute for booking this room</div>
+        </div>
+
+        <!-- Equipment & Features -->
+        <div class="form-group">
+          <label class="form-label">Available Equipment</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="hasProjector" ngModel>
+              <span class="checkbox-label">Has Projector</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="hasWhiteboard" ngModel>
+              <span class="checkbox-label">Has Whiteboard</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group full-width">
+        <label class="form-label required">Room Description</label>
+        <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the room features, location, and any special amenities..."></textarea>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add Room</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel(addRoomForm)">Cancel</button>
+      </div>
+    </form>
+  </div>
+</main>

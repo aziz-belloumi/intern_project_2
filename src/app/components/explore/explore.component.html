@@ -1,1 +1,184 @@
-<p>explore works!</p>
+<div class="page-container">
+  <main class="main-content">
+    <div class="explore-container">
+
+      <!-- Page Header -->
+      <div class="explore-header">
+        <p class="page-subtitle">Discover and book the perfect room for your needs</p>
+      </div>
+
+      <!-- Search and Filters -->
+      <div class="search-section">
+        <div class="search-bar">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            type="text"
+            placeholder="Search rooms by type, capacity, or features..."
+            class="search-input"
+            [(ngModel)]="searchTerm"
+            (input)="filterRooms()"
+          />
+        </div>
+
+        <div class="filters-row">
+          <div class="filter-group">
+            <label class="filter-label">Capacity</label>
+            <select class="filter-select" [(ngModel)]="capacityFilter" (change)="filterRooms()">
+              <option value="">Any capacity</option>
+              <option value="1-5">1-5 people</option>
+              <option value="6-10">6-10 people</option>
+              <option value="11-20">11-20 people</option>
+              <option value="21+">21+ people</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Room Type</label>
+            <select class="filter-select" [(ngModel)]="typeFilter" (change)="filterRooms()">
+              <option value="">All types</option>
+              <option value="meeting">Meeting Room</option>
+              <option value="conference">Conference Room</option>
+              <option value="training">Training Room</option>
+              <option value="boardroom">Boardroom</option>
+              <option value="presentation">Presentation Room</option>
+              <option value="huddle">Huddle Room</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Price Range</label>
+            <select class="filter-select" [(ngModel)]="priceFilter" (change)="filterRooms()">
+              <option value="">Any price</option>
+              <option value="0-0.5">$0.00 - $0.50/min</option>
+              <option value="0.5-1">$0.50 - $1.00/min</option>
+              <option value="1-2">$1.00 - $2.00/min</option>
+              <option value="2+">$2.00+/min</option>
+            </select>
+          </div>
+
+          <div class="equipment-filters">
+            <label class="equipment-filter">
+              <input type="checkbox" [(ngModel)]="projectorFilter" (change)="filterRooms()" />
+              <span class="equipment-label">Projector</span>
+            </label>
+            <label class="equipment-filter">
+              <input type="checkbox" [(ngModel)]="whiteboardFilter" (change)="filterRooms()" />
+              <span class="equipment-label">Whiteboard</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Info -->
+      <div class="results-info">
+        <span class="results-count">Showing {{ filteredRooms.length }} rooms</span>
+        <div class="view-options">
+          <button
+            class="view-btn"
+            [class.active]="currentView === 'grid'"
+            (click)="setView('grid')"
+          >
+            <!-- grid icon -->
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/>
+            </svg>
+          </button>
+          <button
+            class="view-btn"
+            [class.active]="currentView === 'list'"
+            (click)="setView('list')"
+          >
+            <!-- list icon -->
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Rooms Grid -->
+      <div class="rooms-container" [ngClass]="currentView + '-view'">
+        <div *ngIf="filteredRooms.length === 0" class="no-results">
+          <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <h3>No rooms found</h3>
+          <p>Try adjusting your search criteria or filters</p>
+        </div>
+
+        <div *ngFor="let room of filteredRooms" class="room-card">
+          <div class="room-image">
+            <div class="room-type-badge">{{ formatRoomType(room.roomType) }}</div>
+            <div class="room-capacity-badge">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.999 2.999 0 0017 6c-1.66 0-3 1.34-3 3 0 .35.07.69.18 1H12c-1.11 0-2 .89-2 2v1H8.5c-.28 0-.5.22-.5.5s.22.5.5.5H10v6c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2z"/>
+              </svg>
+              {{ room.capacity }}
+            </div>
+          </div>
+
+          <div class="room-content">
+            <div class="room-header">
+              <h3 class="room-title">Room {{ room.id }} - {{ formatRoomType(room.roomType) }}</h3>
+              <div class="room-price">${{ room.pricePerMinute.toFixed(2) }}/min</div>
+            </div>
+
+            <p class="room-description">{{ room.description }}</p>
+
+            <div class="room-features">
+              <span *ngIf="room.hasProjector" class="feature-tag projector">Projector</span>
+              <span *ngIf="room.hasWhiteboard" class="feature-tag whiteboard">Whiteboard</span>
+              <span *ngIf="!room.hasProjector && !room.hasWhiteboard" class="feature-tag basic">Basic Setup</span>
+            </div>
+
+            <div class="room-actions">
+              <button class="btn btn-primary" (click)="bookRoom(room.id)">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                Book Now
+              </button>
+              <button class="btn btn-outline" (click)="viewDetails(room.id)">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="pagination-btn" disabled>
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+          Previous
+        </button>
+        <div class="pagination-info">
+          <span>Page 1 of 3</span>
+        </div>
+        <button class="pagination-btn">
+          Next
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Add this at the end of your explore.component.html template -->
+
+<app-custom-popup
+  [roomType]="selectedRoom ? formatRoomType(selectedRoom.roomType) : ''"
+  [capacity]="selectedRoom?.capacity || 0"
+  [location]="'Building A, Floor 2'"
+  [pricePerMinute]="selectedRoom ? selectedRoom.pricePerMinute.toFixed(2) : '0.00'"
+  [hasProjector]="selectedRoom?.hasProjector || false"
+  [hasWhiteboard]="selectedRoom?.hasWhiteboard || false"
+  [description]="selectedRoom?.description || ''"
+  [isVisible]="showPopup"
+  [autoCloseDelay]="0"
+  closeButtonText="Close"
+  (closed)="onPopupClosed()">
+</app-custom-popup>

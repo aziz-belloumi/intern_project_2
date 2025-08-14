@@ -3,8 +3,14 @@
 
   <div class="carousel-container">
     <button class="carousel-btn prev" (click)="scrollLeft()">&#10094;</button>
-
-    <div class="cards-wrapper" #cardsWrapper>
+    <section class="dots-container" *ngIf="roomsLoading$ | async">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </section>
+    <div class="cards-wrapper" #cardsWrapper *ngIf="!(roomsLoading$ | async) && (rooms$ | async) as rooms">
       <div
         *ngFor="let room of rooms"
         class="resource-card"

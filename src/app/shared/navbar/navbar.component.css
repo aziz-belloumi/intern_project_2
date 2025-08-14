@@ -104,8 +104,6 @@ body {
   background: #0000FF;
   color: white;
   font-family: inherit;
-  padding: 0.35em;
-  padding-left: 1.2em;
   font-size: 17px;
   font-weight: 500;
   border-radius: 0.9em;
@@ -117,7 +115,7 @@ body {
   overflow: hidden;
   position: relative;
   height: 2.8em;
-  padding-right: 3.3em;
+  padding: 0.35em 3.3em 0.35em 1.2em;
 }
 
 .cssbuttons-io-button .icon {
@@ -151,4 +149,48 @@ body {
 
 .cssbuttons-io-button:active .icon {
   transform: scale(0.95);
+}
+
+
+.oauthButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width:8.2rem;
+  height: 2.87rem;
+  border-radius: 0.7em;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 250ms;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.oauthButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2.82rem;
+  width: 0;
+  background-color: #212121;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+}
+
+.oauthButton:hover {
+  color: #e8e8e8;
+}
+
+.oauthButton:hover::before {
+  width: 100%;
+}
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'; //This makes it available to use through Angular’s Dependency Injection (DI) system.
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, tap} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {User} from "../models/user.model";
 
@@ -19,25 +19,20 @@ export class AuthService {
 
 
   signIn(user: { email: string, password: string }): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    return new Observable(observer => {
-      this.http.post<any>(`${this.apiUrl}/sign-in`, JSON.stringify(user), { headers })
-        .subscribe({
-          next: (response) => {
-            const token = response.token;
-            localStorage.setItem('token', token);
-            observer.next(response);
-            observer.complete();
-          },
-          error: (err) => {
-            observer.error(err);
-          }
-        });
-    });
+    return this.http.post<any>(`${this.apiUrl}/sign-in`, user).pipe(
+      tap(response => localStorage.setItem('token', response.token)) // tap() is a side-effect operator.It lets you do something with the data without changing it.
+    );
   }
+
+  // signInWithGoogle(token: string): Observable<any> {
+  //   // token is the Google ID token from the client
+  //   return this.http.post<any>(`${this.apiUrl}/google-sign-in`, { token });
+  // }
+
+  logOut(): void {
+    localStorage.removeItem('token');
+  }
+
 
   getUserFromToken(): any {
     const token = localStorage.getItem('token');
@@ -50,9 +45,5 @@ export class AuthService {
     catch (e) {
       return null;
     }
-  }
-
-  logOut(): void {
-    localStorage.removeItem('token');
   }
 }

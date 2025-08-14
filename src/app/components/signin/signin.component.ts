@@ -51,7 +51,6 @@ export class SigninPageComponent implements OnInit,OnDestroy {
        filter(user => !!user), // wait until user becomes non-null
        take(1) // only take the first valid user
      ).subscribe((user)=>{
-       console.log("****************************************",user);
        this.router.navigate(['/dashboard']);
      })
    }
