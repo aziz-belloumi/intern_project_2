@@ -4,36 +4,6 @@
   align-items: center;
   justify-content: space-between;
 }
-
-.cards-wrapper {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
-}
-
-.cards-wrapper::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-
-.resource-card {
-  min-width: 250px;
-  margin-right: 20px;
-  background-color: #e9ecef;
-  padding: 20px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-}
-
-.resource-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
 .carousel-btn {
   height: 8rem;
   background-color: #212529;
@@ -116,5 +86,269 @@
     transform: scale(0.8);
     background-color: #b3d4fc;
     box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+  }
+}
+.section-title {
+  color: black;
+  font-size: 1.70rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Loading Dots */
+.dots-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #0000FF;
+  animation: pulse 1.5s infinite;
+}
+
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.1s; }
+.dot:nth-child(3) { animation-delay: 0.2s; }
+.dot:nth-child(4) { animation-delay: 0.3s; }
+.dot:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+  0%, 20% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+  80%, 100% { opacity: 0.3; transform: scale(1); }
+}
+
+/* Cards Wrapper */
+.cards-wrapper {
+  display: flex;
+  gap: 6rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-top: 0.8rem;
+  padding-bottom: 3rem;
+  padding-left: 3rem;
+  scroll-behavior: smooth;
+}
+
+.cards-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Flip Card Styles */
+.flip-card {
+  background-color: white;
+  width: 200px;
+  height: 280px;
+  perspective: 1000px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  flex-shrink: 0;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  box-shadow: 0 8px 20px rgba(0, 0, 255, 0.15);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border: 2px solid #0000FF;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Front Card - Blue Theme */
+.flip-card-front {
+  background: white
+}
+
+/* Back Card - Blue Theme */
+.flip-card-back {
+  background: linear-gradient(135deg,
+  #0000FF 0%,
+  #0000CC 50%,
+  #1976d2 100%);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+
+/* Title */
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+  color: inherit;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.flip-card-back .subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Capacity Badge */
+.capacity-badge {
+  background: rgba(0, 0, 255, 0.1);
+  border: 1px solid #0000FF;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.capacity-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0000FF;
+}
+
+.capacity-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Room Details (Back) */
+.room-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* Feature Badges */
+.feature-badge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.25rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .resource-overview {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .flip-card {
+    width: 180px;
+    height: 260px;
+  }
+
+  .cards-wrapper {
+    gap: 1rem;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .carousel-btn.prev {
+    left: 5px;
+  }
+
+  .carousel-btn.next {
+    right: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flip-card {
+    width: 160px;
+    height: 240px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .capacity-number {
+    font-size: 1.25rem;
+  }
+
+  .room-details {
+    gap: 0.5rem;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
   }
 }

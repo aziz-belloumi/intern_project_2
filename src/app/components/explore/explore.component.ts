@@ -14,18 +14,18 @@ import { CustomPopupComponent } from "./custom-popup/custom-popup.component";
 })
 export class ExplorePageComponent {
   sampleRooms: Room[] = [
-    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75, bookings:[] },
-    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60, bookings:[] },
-    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25 , bookings:[]},
-    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45 , bookings:[]},
-    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 , bookings:[]},
-    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75, bookings:[] },
-    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75, bookings:[] },
-    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60, bookings:[] },
-    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25 , bookings:[]},
-    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45 , bookings:[]},
-    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 , bookings:[]},
-    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75, bookings:[] }
+    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75},
+    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60},
+    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25},
+    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45 },
+    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 },
+    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75},
+    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75},
+    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60, },
+    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25 },
+    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45},
+    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 },
+    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75}
   ];
 
   filteredRooms: Room[] = [];

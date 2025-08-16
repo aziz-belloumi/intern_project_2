@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import * as RoomSelectors from "../../../state/room/room.selectors";
 import {Store} from "@ngrx/store";
 import * as RoomActions from "../../../state/room/room.actions";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
   selector: 'app-resource-overview-cards',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: 'resource-overview-cards.component.html',
   styleUrls: ['./resource-overview-cards.component.css'],
 })

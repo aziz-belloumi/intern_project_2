@@ -4,22 +4,24 @@
   <div class="recommendations-grid">
     <div
       *ngFor="let item of recommendations"
-      class="recommendation-card"
-      (click)="openRecommendation(item)"
+      class="parent"
     >
-      <div class="card-image" *ngIf="item.thumbnail">
-        <img [src]="item.thumbnail" [alt]="item.title">
-      </div>
-
-      <div class="card-content">
-        <h3 class="card-title">{{ item.title }}</h3>
-        <p class="card-description">{{ item.description }}</p>
-
-        <div class="card-footer" *ngIf="item.fileName">
-          <div class="file-info">
-            <i class="file-icon">{{ getFileIcon(item.type) }}</i>
-            <span class="file-name">{{ item.fileName }}</span>
+      <div class="card">
+        <div class="content-box">
+          <span class="card-title">Room {{ item.id }} : {{ item.roomType }}</span>
+          <!--<div class="card-image-container" *ngIf="item.roomType">
+            <img [src]="item.description" [alt]="item.roomType" class="card-image">
+          </div>-->
+          <p class="card-content">{{ item.description }}</p>
+          <div class="card-footer" >
+            <div class="file-info">
+              <i class="file-icon">Price Per Minute : ${{item.pricePerMinute }}</i>
+            </div>
           </div>
+          <span class="see-more">View Details</span>
+        </div>
+        <div class="date-box">
+          <span class="date">Capacity : {{ item.capacity}}</span>
         </div>
       </div>
     </div>

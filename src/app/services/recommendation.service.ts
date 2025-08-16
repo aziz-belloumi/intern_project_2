@@ -1,34 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-export interface RecommendRequest {
-  user_id: number;
-  purpose: string;
-  attendees: number;
-  target_date: string;      // Format: YYYY-MM-DD
-  target_hours: number[];
-  top_k: number;
-}
+import { HttpClient } from '@angular/common/http';
+import {map, Observable} from 'rxjs';
+import {Room} from "../models/room.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecommendationService {
-  private baseUrl = 'http://localhost:8000'; // Your FastAPI backend URL
+  private apiUrl = 'http://localhost:8000/recommend';
 
   constructor(private http: HttpClient) {}
 
-  getRecommendations(req: RecommendRequest): Observable<any> {
-    return this.http.post(`${this.baseUrl}/recommend`, req);
+  getRecommendations(roomId: number): Observable<Room[]> {
+    return this.http.post<any[]>(this.apiUrl, { id: roomId }).pipe(
+      map(rooms =>
+        rooms.map(r => ({
+          id: r.Id,
+          roomType: r.RoomType,
+          capacity: r.Capacity,
+          hasProjector: r.HasProjector,
+          hasWhiteboard: r.HasWhiteboard,
+          description: r.Description,
+          pricePerMinute: r.PricePerMinute,
+        }))
+      )
+    );
   }
 
-  getRoom(room_id: string): Observable<any> {
-    const params = new HttpParams().set('room_id', room_id);
-    return this.http.get(`${this.baseUrl}/room`, { params });
-  }
-
-  getUserPreferences(user_id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/user/${user_id}/preferences`);
-  }
 }

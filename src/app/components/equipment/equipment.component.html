@@ -1,1 +1,186 @@
-<p>equipment works!</p>
+<main class="main-content">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Equipment Management</h1>
+    <p class="page-description">Manage your equipment inventory and add new items</p>
+  </div>
+
+  <!-- User's Equipment Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">My Equipment</h2>
+      <p class="section-description">Equipment you own and manage</p>
+    </div>
+
+    <div class="equipment-grid" *ngIf="userEquipment.length > 0; else noUserEquipment">
+      <div class="equipment-card" *ngFor="let equipment of userEquipment">
+        <div class="equipment-name">{{equipment.name}}</div>
+        <div class="equipment-type">{{equipment.type}}</div>
+        <div class="equipment-description">{{equipment.description}}</div>
+        <div class="equipment-status" [ngClass]="'status-' + equipment.status">
+          {{equipment.status}}
+        </div>
+        <div class="equipment-actions">
+          <button class="btn btn-small btn-primary" (click)="updateEquipment(equipment.id)">Update</button>
+          <button class="btn btn-small btn-danger" (click)="deleteEquipment(equipment.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noUserEquipment>
+      <div class="empty-state">
+        <p>You don't have any equipment yet. Add your first equipment below!</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Add New Equipment Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Add New Equipment</h2>
+      <p class="section-description">Fill in the details below to add new equipment to your inventory</p>
+    </div>
+
+    <div class="success-message" *ngIf="successMessage">
+      Equipment has been successfully added to the system!
+    </div>
+
+    <form #addEquipmentForm="ngForm" (ngSubmit)="onSubmit(addEquipmentForm)">
+      <div class="form-grid">
+        <!-- Equipment Name -->
+        <div class="form-group">
+          <label class="form-label required">Equipment Name</label>
+          <input type="text" class="form-input" name="name" ngModel required placeholder="e.g., MacBook Pro 16">
+          <div class="form-hint">Name or model of the equipment</div>
+        </div>
+
+        <!-- Equipment Type -->
+        <div class="form-group">
+          <label class="form-label required">Equipment Type</label>
+          <select class="form-select" name="type" ngModel required>
+            <option value="">Select equipment type...</option>
+            <option value="laptop">Laptop</option>
+            <option value="desktop">Desktop Computer</option>
+            <option value="monitor">Monitor</option>
+            <option value="projector">Projector</option>
+            <option value="camera">Camera</option>
+            <option value="audio">Audio Equipment</option>
+            <option value="networking">Networking</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Purchase Price -->
+        <div class="form-group">
+          <label class="form-label">Purchase Price</label>
+          <div class="price-input-group">
+            <span class="currency-symbol">$</span>
+            <input type="number" class="form-input price-input" name="price" ngModel step="0.01" min="0" placeholder="1200.00">
+          </div>
+          <div class="form-hint">Original purchase price (optional)</div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label class="form-label required">Status</label>
+          <select class="form-select" name="status" ngModel required>
+            <option value="">Select status...</option>
+            <option value="available">Available</option>
+            <option value="maintenance">Under Maintenance</option>
+            <option value="unavailable">Unavailable</option>
+          </select>
+        </div>
+
+        <!-- Specifications -->
+        <div class="form-group">
+          <label class="form-label">Specifications</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="hasWarranty" ngModel>
+              <span class="checkbox-label">Under Warranty</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="isPortable" ngModel>
+              <span class="checkbox-label">Portable</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Serial Number -->
+        <div class="form-group">
+          <label class="form-label">Serial Number</label>
+          <input type="text" class="form-input" name="serialNumber" ngModel placeholder="e.g., SN123456789">
+          <div class="form-hint">Equipment serial number (optional)</div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group full-width">
+        <label class="form-label required">Equipment Description</label>
+        <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the equipment specifications, condition, and any special notes..."></textarea>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add Equipment</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel(addEquipmentForm)">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- All Equipment Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">All Equipment</h2>
+      <p class="section-description">Browse all equipment in the system</p>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="equipment-filters">
+      <div class="filter-group">
+        <input type="text" class="form-input search-input" [(ngModel)]="searchTerm" placeholder="Search equipment...">
+      </div>
+      <div class="filter-group">
+        <select class="form-select filter-select" [(ngModel)]="filterType">
+          <option value="">All Types</option>
+          <option value="laptop">Laptop</option>
+          <option value="desktop">Desktop Computer</option>
+          <option value="monitor">Monitor</option>
+          <option value="projector">Projector</option>
+          <option value="camera">Camera</option>
+          <option value="audio">Audio Equipment</option>
+          <option value="networking">Networking</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <select class="form-select filter-select" [(ngModel)]="filterStatus">
+          <option value="">All Status</option>
+          <option value="available">Available</option>
+          <option value="maintenance">Under Maintenance</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="equipment-grid" *ngIf="allEquipment.length > 0; else noEquipment">
+      <div class="equipment-card" *ngFor="let equipment of filteredEquipment">
+        <div class="equipment-name">{{equipment.name}}</div>
+        <div class="equipment-type">{{equipment.type}}</div>
+        <div class="equipment-description">{{equipment.description}}</div>
+        <div class="equipment-status" [ngClass]="'status-' + equipment.status">
+          {{equipment.status}}
+        </div>
+        <div class="equipment-owner" *ngIf="equipment.owner">
+          <span class="owner-label">Owner:</span> {{equipment.owner}}
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noEquipment>
+      <div class="empty-state">
+        <p>No equipment found in the system.</p>
+      </div>
+    </ng-template>
+  </div>
+</main>

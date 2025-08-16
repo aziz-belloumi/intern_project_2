@@ -6,5 +6,4 @@ export interface Room {
   hasWhiteboard: boolean;
   description: string;
   pricePerMinute: number;
-  bookings: any[];
 }
