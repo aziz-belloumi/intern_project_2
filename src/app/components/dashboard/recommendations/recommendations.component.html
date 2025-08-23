@@ -3,7 +3,7 @@
 
   <div class="recommendations-grid">
     <div
-      *ngFor="let item of recommendations"
+      *ngFor="let item of recommendations$ | async"
       class="parent"
     >
       <div class="card">

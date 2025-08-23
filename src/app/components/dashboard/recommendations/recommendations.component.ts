@@ -2,7 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {Room} from "../../../models/room.model";
-import {RecommendationService} from "../../../services/recommendation.service";
+import * as RecommendationSelectors from "../../../state/recommendation/recommendation.selectors";
+import * as RecommendationActions from "../../../state/recommendation/recommendation.actions";
+import {Observable} from "rxjs";
+import {Store} from "@ngrx/store";
 
 
 @Component({
@@ -13,13 +16,18 @@ import {RecommendationService} from "../../../services/recommendation.service";
   styleUrls: ['./recommendations.component.css']
 })
 export class RecommendationsComponent implements OnInit {
-  constructor(private recommendationService: RecommendationService) { }
-  recommendations: Room[] =[] ;
+
+  recommendations$: Observable<Room[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+
+  constructor(private store: Store) {
+    this.recommendations$ = this.store.select(RecommendationSelectors.selectRecommendations);
+    this.loading$ = this.store.select(RecommendationSelectors.selectRecommendationLoading);
+    this.error$ = this.store.select(RecommendationSelectors.selectRecommendationError);
+  }
+
   ngOnInit(): void {
-    this.recommendationService.getRecommendations(1)
-      .subscribe((rooms: Room[]) => {
-        console.log('Recommended rooms:', rooms);
-        this.recommendations = rooms;
-      });
+    this.store.dispatch(RecommendationActions.loadRecommendations({ roomId: 1 }));
   }
 }

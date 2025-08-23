@@ -12,12 +12,14 @@ import {RoomEffects} from "./app/state/room/room.effects";
 import {roomReducer} from "./app/state/room/room.reducer";
 import {bookingReducer} from "./app/state/booking/booking.reducer";
 import {BookingEffects} from "./app/state/booking/booking.effects";
+import {recommendationReducer} from "./app/state/recommendation/recommendation.reducer";
+import {RecommendationEffects} from "./app/state/recommendation/recommendation.effects";
 
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideStore({ auth: authReducer , room: roomReducer, booking: bookingReducer }),
-    provideEffects([AuthEffects,RoomEffects,BookingEffects]),
+    provideStore({ auth: authReducer , room: roomReducer, booking: bookingReducer , recommendation: recommendationReducer }),
+    provideEffects([AuthEffects,RoomEffects,BookingEffects,RecommendationEffects]),
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),

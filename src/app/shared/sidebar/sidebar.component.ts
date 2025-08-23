@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {Router, RouterModule} from '@angular/router';
 import {MatIconModule} from "@angular/material/icon";
 import {AuthService} from "../../services/auth.service";
+import {SocketService} from "../../services/socket.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -12,9 +13,10 @@ import {AuthService} from "../../services/auth.service";
   styleUrls: ['sidebar.component.css']
 })
 export class SidebarComponent {
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService, private socketService: SocketService) { }
   onLogOutClick() {
     this.authService.logOut();
+    this.socketService.close();// to close the socket connection and prevent memory leaks
     this.router.navigate(['/home'])
   }
 }

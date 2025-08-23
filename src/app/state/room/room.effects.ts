@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as RoomActions from './room.actions';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import {catchError, filter, map, mergeMap, of} from 'rxjs';
 import {RoomService} from "../../services/room.service";
+import {SocketService} from "../../services/socket.service";
 
 @Injectable()
 export class RoomEffects {
-  constructor(private actions$: Actions, private roomService: RoomService) {}
+  constructor(private actions$: Actions, private roomService: RoomService , private socketService: SocketService) {}
 
   loadRooms$ = createEffect(() =>
     this.actions$.pipe(
@@ -65,6 +66,13 @@ export class RoomEffects {
           catchError(error => of(RoomActions.deleteRoomFailure({ error })))
         )
       )
+    )
+  );
+
+  webSocket$ = createEffect(() =>
+    this.socketService.events$.pipe(
+      filter(event => ['roomCreated','roomUpdated','roomDeleted'].includes(event.type)),
+      map(() => RoomActions.loadRooms()) // reload or update slice
     )
   );
 }
