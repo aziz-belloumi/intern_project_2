@@ -11,6 +11,6 @@
         public required decimal PricePerMinute { get; set; }
 
 
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>(); // bookings associated with the room
     }
 }

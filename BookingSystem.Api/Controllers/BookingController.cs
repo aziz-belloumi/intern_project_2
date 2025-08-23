@@ -1,6 +1,8 @@
 ﻿using BookingSystem.Data.Models;
+using BookingSystem.Services.Services.Implementations;
 using BookingSystem.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingSystem.Api.Controllers
 {
@@ -90,6 +92,35 @@ namespace BookingSystem.Api.Controllers
             var bookings = await _bookingService.GetRecentBookingsAsync(userId);
             if (bookings == null) return NotFound();
             return Ok(bookings);
+        }
+
+        [HttpGet("get-room-availability")]
+        public async Task<IActionResult> CheckRoomAvailability([FromQuery] int roomId, [FromQuery] DateTime startTime, [FromQuery] DateTime endTime)
+        {
+            try
+            {
+                if (startTime >= endTime)
+                    return BadRequest("Start time must be earlier than end time.");
+
+                var status = await _bookingService.CheckRoomAvailabilityAsync(roomId, startTime, endTime);
+                return Ok(new { RoomId = roomId, Status = status });
+            }
+            catch(Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+
+
+        [HttpGet("get-all-rooms-availability")]
+        public async Task<IActionResult> CheckAllRoomsAvailability([FromQuery] DateTime startTime, [FromQuery] DateTime endTime)
+        {
+            if (startTime >= endTime)
+                return BadRequest("Start time must be earlier than end time.");
+
+            var availability = await _bookingService.CheckAllRoomsAvailabilityAsync(startTime, endTime);
+            return Ok(availability);
         }
 
     }

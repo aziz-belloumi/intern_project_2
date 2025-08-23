@@ -1,5 +1,14 @@
 ﻿namespace BookingSystem.Data.Models
 {
+
+
+    public enum BookingStatus
+    {
+        Pending,
+        Confirmed,
+        Cancelled,
+        Completed
+    }
     public class Booking
     {
         public int Id { get; set; }

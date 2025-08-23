@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServerConnection")));
 
 
+builder.Services.AddSingleton<RoomWebSocketHandler>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
@@ -30,6 +31,8 @@ builder.Services.AddSingleton<JwtTokenGenerator>();
 
 
 var app = builder.Build();
+
+app.UseWebSockets();
 
 
 
@@ -49,6 +52,23 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.Map("/ws", async context =>
+{
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        var wsHandler = app.Services.GetRequiredService<RoomWebSocketHandler>();
+        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+        await wsHandler.HandleAsync(webSocket);
+    }
+    else
+    {
+        context.Response.StatusCode = 400;
+    }
+});
+
+
+
 
 app.MapControllers();
 

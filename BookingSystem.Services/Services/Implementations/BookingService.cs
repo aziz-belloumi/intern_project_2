@@ -1,7 +1,9 @@
 ﻿using BookingSystem.Data.Data;
 using BookingSystem.Data.Models;
+using BookingSystem.Services.Helpers;
 using BookingSystem.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 
 namespace BookingSystem.Services.Services.Implementations
@@ -9,13 +11,15 @@ namespace BookingSystem.Services.Services.Implementations
     public class BookingService : IBookingService
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoomWebSocketHandler _wsHandler;
 
-        public BookingService(ApplicationDbContext context)
+        public BookingService(ApplicationDbContext context, RoomWebSocketHandler wsHandler)
         {
             _context = context;
+            _wsHandler = wsHandler;
         }
 
-        public async Task<List<Object>?> GetUserBookingsChunkAsync(int userId, int? lastBookingId, int chunkSize = 1)
+        public async Task<List<Object>?> GetUserBookingsChunkAsync(int userId, int? lastBookingId, int chunkSize = 10)
         {
             try
             {
@@ -88,6 +92,7 @@ namespace BookingSystem.Services.Services.Implementations
             {
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new { action = "bookingCreated" }));
                 return true;
             }
             catch (Exception)
@@ -197,7 +202,72 @@ namespace BookingSystem.Services.Services.Implementations
         }
 
 
+        public async Task<string> CheckRoomAvailabilityAsync(int roomId, DateTime startTime, DateTime endTime)
+        {
+            try
+            {
+                var overlappingBooking = await _context.Bookings
+                .Where(b => b.RoomId == roomId &&
+                            (startTime < b.EndTime && endTime > b.StartTime))
+                .OrderByDescending(b => b.CreatedAt)
+                .FirstOrDefaultAsync();
 
+                if (overlappingBooking == null)
+                {
+                    return "Available";
+                }
+
+                if (overlappingBooking.Status == BookingStatus.Pending)
+                {
+                    return "Still Waiting for Confirmation";
+                }
+
+                if (overlappingBooking.Status == BookingStatus.Confirmed)
+                {
+                    return "Not Available";
+                }
+
+                return "Not Available";
+            }
+            catch(Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+        }
+        public async Task<Dictionary<int, string>> CheckAllRoomsAvailabilityAsync(DateTime startTime, DateTime endTime)
+        {
+            var results = new Dictionary<int, string>();
+
+            var rooms = await _context.Rooms.ToListAsync();
+
+            foreach (var room in rooms)
+            {
+                var overlappingBooking = await _context.Bookings
+                    .Where(b => b.RoomId == room.Id &&
+                                (startTime < b.EndTime && endTime > b.StartTime))
+                    .OrderByDescending(b => b.CreatedAt)
+                    .FirstOrDefaultAsync();
+
+                if (overlappingBooking == null)
+                {
+                    results[room.Id] = "Available";
+                }
+                else if (overlappingBooking.Status == BookingStatus.Pending)
+                {
+                    results[room.Id] = "Still Waiting for Confirmation";
+                }
+                else if (overlappingBooking.Status == BookingStatus.Confirmed)
+                {
+                    results[room.Id] = "Not Available";
+                }
+                else
+                {
+                    results[room.Id] = "Not Available";
+                }
+            }
+
+            return results;
+        }
     }
 
 }

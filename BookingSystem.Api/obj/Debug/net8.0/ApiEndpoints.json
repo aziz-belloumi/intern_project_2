@@ -22,6 +22,27 @@
   },
   {
     "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "CheckAllRoomsAvailability",
+    "RelativePath": "api/Booking/get-all-rooms-availability",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "startTime",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "endTime",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
     "Method": "GetBookingById",
     "RelativePath": "api/Booking/get-booking/{id}",
     "HttpMethod": "GET",
@@ -47,6 +68,32 @@
       {
         "Name": "userId",
         "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "CheckRoomAvailability",
+    "RelativePath": "api/Booking/get-room-availability",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "startTime",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "endTime",
+        "Type": "System.DateTime",
         "IsRequired": false
       }
     ],

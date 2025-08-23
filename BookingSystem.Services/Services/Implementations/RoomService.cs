@@ -1,7 +1,9 @@
 ﻿using BookingSystem.Data.Data;
 using BookingSystem.Data.Models;
+using BookingSystem.Services.Helpers;
 using BookingSystem.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 
 namespace BookingSystem.Services.Services.Implementations
@@ -10,11 +12,13 @@ namespace BookingSystem.Services.Services.Implementations
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly RoomWebSocketHandler _wsHandler;
 
 
-        public RoomService(ApplicationDbContext context)
+        public RoomService(ApplicationDbContext context, RoomWebSocketHandler wsHandler)
         {
             _context = context;
+            _wsHandler = wsHandler;
         }
 
 
@@ -24,6 +28,8 @@ namespace BookingSystem.Services.Services.Implementations
             {
                 await _context.Rooms.AddAsync(newRoom);
                 await _context.SaveChangesAsync();
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new { action = "roomCreated" }));
+
                 return true;
             }
             catch (Exception)
@@ -71,6 +77,7 @@ namespace BookingSystem.Services.Services.Implementations
                 existingRoom.Description = updatedRoom.Description;
                 existingRoom.PricePerMinute = updatedRoom.PricePerMinute;
                 await _context.SaveChangesAsync();
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new { action = "roomUpdated" }));
                 return true;
             }
             catch (Exception)
@@ -88,6 +95,7 @@ namespace BookingSystem.Services.Services.Implementations
 
                 _context.Rooms.Remove(room);
                 await _context.SaveChangesAsync();
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new { action = "roomDeleted" }));
                 return true;
             }
             catch (Exception)

@@ -22,6 +22,7 @@ namespace BookingSystem.Api.Controllers
             try
             {
                 var result = await _roomService.CreateRoomAsync(newRoom);
+
                 if (result)
                 {
                     return Ok(result);
