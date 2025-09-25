@@ -23,4 +23,9 @@ export class BookingService {
   getUserRecentBookings(userId: number):Observable<Booking[]> {
     return this.http.get<Booking[]>(`${this.apiUrl}/get-recent-bookings?userId=${userId}`);
   }
+
+  getAllRoomsAvailability(endTime?: string) {
+    return this.http.get<any>(`${this.apiUrl}/get-all-rooms-availability?endTime=${endTime}`);
+  }
+
 }

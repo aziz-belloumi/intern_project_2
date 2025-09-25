@@ -1,6 +1,9 @@
 // components/resource-table/resource-table.component.ts
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import * as RoomAvailabilityActions from "../../../state/room-availability/room-availability.actions";
+import * as RoomAvailabilitySelectors from "../../../state/room-availability/room-availability.selectors";
+import {Store} from "@ngrx/store";
 
 export interface ResourceItem {
   id: string;
@@ -20,7 +23,15 @@ export interface ResourceItem {
   templateUrl: './resource-table.component.html',
   styleUrls: ['./resource-table.component.css']
 })
-export class ResourceTableComponent {
+export class ResourceTableComponent implements OnInit {
+
+  constructor(private store: Store ){}
+  ngOnInit(): void {
+    this.store.dispatch(RoomAvailabilityActions.loadRoomAvailability({}));
+    console.log("//////////////////////////////////////////// : ", this.roomAvailability$);
+  }
+
+  roomAvailability$ = this.store.select(RoomAvailabilitySelectors.selectAllRooms);
   @Input() resources: ResourceItem[] = [
     {
       id: '1',
@@ -104,4 +115,7 @@ export class ResourceTableComponent {
     console.log(`Reserving resource: ${resource.name}`);
     // You can integrate real reservation logic here later
   }
+
+
+
 }
