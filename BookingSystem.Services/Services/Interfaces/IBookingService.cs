@@ -4,15 +4,14 @@ namespace BookingSystem.Services.Services.Interfaces
 {
     public interface IBookingService
     {
-        Task<List<object>?> GetUserBookingsChunkAsync(int userId , int? lastBookingId , int chunksize = 10);
+        Task<List<object>?> GetUserBookingsChunkAsync(int userId , int? lastBookingId , int chunksize = 10); // profile
         Task<Booking?> GetBookingByIdAsync(int id);
-        Task<bool> CreateBookingAsync(Booking booking);
-        //Task<bool> UpdateBookingAsync(int id, Booking booking);
-        //Task<bool> DeleteBookingAsync(int id);
-        Task<List<decimal>?> GetUserStatisticsAsync(int userId);
-        Task<List<object>?> GetRecentBookingsAsync(int userId);
-        Task<string> CheckRoomAvailabilityAsync(int roomId, DateTime startTime, DateTime endTime);
-        Task<Dictionary<int,string>> CheckAllRoomsAvailabilityAsync(DateTime startTime, DateTime endTime);
+        Task<bool> CreateBookingAsync(Booking booking); // dashboard : reserve icon
+        Task<bool> UpdateBookingAsync(int id, Booking booking);
+        Task<List<decimal>?> GetUserStatisticsAsync(int userId); // profile
+        Task<List<object>?> GetRecentBookingsAsync(int userId); // profile
+        Task<string> CheckRoomAvailabilityAsync(int roomId); // dashboard : the cards in recource 
+        Task<object> CheckAllRoomsAvailabilityAsync(DateTime? startTime = null ,DateTime ? endTime = null); // dashboard : the room table
     }
 
 }

@@ -30,12 +30,12 @@
     "Parameters": [
       {
         "Name": "startTime",
-        "Type": "System.DateTime",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
         "Name": "endTime",
-        "Type": "System.DateTime",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       }
     ],
@@ -84,16 +84,6 @@
       {
         "Name": "roomId",
         "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "startTime",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "endTime",
-        "Type": "System.DateTime",
         "IsRequired": false
       }
     ],

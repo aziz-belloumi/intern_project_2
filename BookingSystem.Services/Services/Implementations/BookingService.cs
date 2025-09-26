@@ -101,7 +101,7 @@ namespace BookingSystem.Services.Services.Implementations
             }
         }
 
-        /*public async Task<bool> UpdateBookingAsync(int id, Booking booking)
+        public async Task<bool> UpdateBookingAsync(int id, Booking booking)
         {
             var existingBooking = await _context.Bookings.FindAsync(id);
             if (existingBooking == null) return false;
@@ -116,7 +116,7 @@ namespace BookingSystem.Services.Services.Implementations
 
             await _context.SaveChangesAsync();
             return true;
-        }*/
+        }
 
 
         public async Task<List<decimal>?> GetUserStatisticsAsync(int userId)
@@ -202,15 +202,17 @@ namespace BookingSystem.Services.Services.Implementations
         }
 
 
-        public async Task<string> CheckRoomAvailabilityAsync(int roomId, DateTime startTime, DateTime endTime)
+        public async Task<string> CheckRoomAvailabilityAsync(int roomId)
         {
             try
             {
+                var now = DateTime.Now;
+
                 var overlappingBooking = await _context.Bookings
-                .Where(b => b.RoomId == roomId &&
-                            (startTime < b.EndTime && endTime > b.StartTime))
-                .OrderByDescending(b => b.CreatedAt)
-                .FirstOrDefaultAsync();
+                    .Where(b => b.RoomId == roomId &&
+                                b.StartTime <= now && b.EndTime >= now)
+                    .OrderByDescending(b => b.CreatedAt)
+                    .FirstOrDefaultAsync();
 
                 if (overlappingBooking == null)
                 {
@@ -229,45 +231,93 @@ namespace BookingSystem.Services.Services.Implementations
 
                 return "Not Available";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return $"Error: {ex.Message}";
             }
         }
-        public async Task<Dictionary<int, string>> CheckAllRoomsAvailabilityAsync(DateTime startTime, DateTime endTime)
+        public async Task<object> CheckAllRoomsAvailabilityAsync(DateTime? startTime = null, DateTime? endTime = null)
         {
-            var results = new Dictionary<int, string>();
+            var now = DateTime.Now;
+
+            var actualStartTime = startTime ?? now;
+            var actualEndTime = endTime ?? actualStartTime.AddHours(24);
+
+            if (actualEndTime <= actualStartTime)
+                throw new ArgumentException("End time must be later than start time.");
+
+            var result = new List<object>();
 
             var rooms = await _context.Rooms.ToListAsync();
 
+            var overlappingBookings = await _context.Bookings
+                .Where(b => actualStartTime < b.EndTime && actualEndTime > b.StartTime)
+                .ToListAsync();
+
+            var bookingsByRoom = overlappingBookings
+                .GroupBy(b => b.RoomId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
             foreach (var room in rooms)
             {
-                var overlappingBooking = await _context.Bookings
-                    .Where(b => b.RoomId == room.Id &&
-                                (startTime < b.EndTime && endTime > b.StartTime))
-                    .OrderByDescending(b => b.CreatedAt)
-                    .FirstOrDefaultAsync();
+                if (!bookingsByRoom.ContainsKey(room.Id))
+                {
+                    result.Add(new
+                    {
+                        RoomId = room.Id,
+                        Capacity = room.Capacity,
+                        Status = "Available",
+                        Message = "This room is available for you"
+                    });
+                    continue;
+                }
 
-                if (overlappingBooking == null)
+                var roomBookings = bookingsByRoom[room.Id];
+
+                var confirmedBooking = roomBookings.FirstOrDefault(b => b.Status == BookingStatus.Confirmed);
+                if (confirmedBooking != null)
                 {
-                    results[room.Id] = "Available";
+                    result.Add(new
+                    {
+                        RoomId = room.Id,
+                        Capacity = room.Capacity,
+                        Status = "Not Available",
+                        Message = $"Reserved from {confirmedBooking.StartTime:G} to {confirmedBooking.EndTime:G}",
+                        StartTime = confirmedBooking.StartTime,
+                        EndTime = confirmedBooking.EndTime
+                    });
                 }
-                else if (overlappingBooking.Status == BookingStatus.Pending)
+                else if (roomBookings.Any(b => b.Status == BookingStatus.Pending))
                 {
-                    results[room.Id] = "Still Waiting for Confirmation";
-                }
-                else if (overlappingBooking.Status == BookingStatus.Confirmed)
-                {
-                    results[room.Id] = "Not Available";
+                    var pendingBooking = roomBookings.First(b => b.Status == BookingStatus.Pending);
+                    result.Add(new
+                    {
+                        RoomId = room.Id,
+                        Capacity = room.Capacity,
+                        Status = "Pending",
+                        Message = "Still waiting for confirmation",
+                        StartTime = pendingBooking.StartTime,
+                        EndTime = pendingBooking.EndTime
+                    });
                 }
                 else
                 {
-                    results[room.Id] = "Not Available";
+                    result.Add(new
+                    {
+                        RoomId = room.Id,
+                        Capacity = room.Capacity,
+                        Status = "Available",
+                        Message = "This room is available for you"
+                    });
                 }
             }
 
-            return results;
+            return new { Rooms = result };
         }
+
+
+
+
     }
 
 }

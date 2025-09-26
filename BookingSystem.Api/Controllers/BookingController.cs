@@ -95,15 +95,14 @@ namespace BookingSystem.Api.Controllers
         }
 
         [HttpGet("get-room-availability")]
-        public async Task<IActionResult> CheckRoomAvailability([FromQuery] int roomId, [FromQuery] DateTime startTime, [FromQuery] DateTime endTime)
+        public async Task<IActionResult> CheckRoomAvailability([FromQuery] int roomId)
         {
             try
             {
-                if (startTime >= endTime)
-                    return BadRequest("Start time must be earlier than end time.");
+                
 
-                var status = await _bookingService.CheckRoomAvailabilityAsync(roomId, startTime, endTime);
-                return Ok(new { RoomId = roomId, Status = status });
+                var status = await _bookingService.CheckRoomAvailabilityAsync(roomId);
+                return Ok(new { Status = status });
             }
             catch(Exception e)
             {
@@ -114,12 +113,9 @@ namespace BookingSystem.Api.Controllers
 
 
         [HttpGet("get-all-rooms-availability")]
-        public async Task<IActionResult> CheckAllRoomsAvailability([FromQuery] DateTime startTime, [FromQuery] DateTime endTime)
+        public async Task<IActionResult> CheckAllRoomsAvailability([FromQuery] DateTime? startTime ,[FromQuery] DateTime? endTime)
         {
-            if (startTime >= endTime)
-                return BadRequest("Start time must be earlier than end time.");
-
-            var availability = await _bookingService.CheckAllRoomsAvailabilityAsync(startTime, endTime);
+            var availability = await _bookingService.CheckAllRoomsAvailabilityAsync(startTime,endTime);
             return Ok(availability);
         }
 
