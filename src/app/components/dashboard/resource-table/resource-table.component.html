@@ -1,56 +1,39 @@
 <div class="resource-table-container">
   <h2 class="section-title">Rooms</h2>
 
-  <div class="table-wrapper">
+  <div class="table-wrapper" *ngIf="rooms$ | async as rooms">
     <table class="resource-table">
       <thead>
       <tr>
-        <th>Resource Name</th>
+        <th>Room</th>
         <th>Capacity</th>
         <th>Availability</th>
-        <th>Last Updated</th>
+        <th>Message</th>
         <th>Reserve</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let resource of resources" class="table-row">
-        <td class="resource-cell">
-          <div class="resource-info">
-            <div class="resource-icon">
-              <i>{{ resource.icon }}</i>
-            </div>
-            <span class="resource-name">{{ resource.name }}</span>
-          </div>
+      <tr *ngFor="let room of rooms">
+        <td>Room {{ room.roomId }}</td>
+        <td>{{ room.capacity }}</td>
+        <td>
+            <span class="availability-badge">
+              {{ getStatusIcon(room.status) }} {{ getStatusText(room.status) }}
+            </span>
         </td>
-
-        <td class="capacity-cell">
-          {{ resource.capacity }}
-        </td>
-
-        <td class="availability-cell">
-                <span
-                  class="availability-badge"
-                  [ngClass]="'availability-' + resource.availability"
-                >
-                  <i class="status-icon">{{ getStatusIcon(resource.availability) }}</i>
-                  {{ getStatusText(resource.availability) }}
-                </span>
-          <span *ngIf="resource.assignedTo" class="assigned-to">
-                  {{ resource.assignedTo }}
-                </span>
-        </td>
-
-        <td class="date-cell">
-          {{ formatDate(resource.lastUpdated) }}
-        </td>
-
-        <td class="action-cell">
+        <td>{{ room.message }}</td>
+        <td>
           <button
             class="reserve-btn"
-            [disabled]="resource.availability === 'reserved'"
-            (click)="reserveResource(resource)"
+            [disabled]="room.status.toLowerCase() !== 'available'"
+            [ngStyle]="{
+                'background-color': room.status.toLowerCase() === 'available' ? '#0056b3' : '#888',
+                color: '#fff',
+                cursor: room.status.toLowerCase() === 'available' ? 'pointer' : 'not-allowed'
+              }"
+            (click)="reserveRoom(room)"
           >
-            <i>📅</i>
+            Reserve
           </button>
         </td>
       </tr>

@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 export const loadRoomAvailability = createAction(
   '[Room] Load Room Availability',
-  props<{ endTime?: string }>() // optional endTime ISO string
+  props<{ startTime?: string,endTime?: string }>() // optional endTime ISO string
 );
 
 export const loadRoomAvailabilitySuccess = createAction(

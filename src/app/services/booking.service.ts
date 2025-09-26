@@ -24,8 +24,8 @@ export class BookingService {
     return this.http.get<Booking[]>(`${this.apiUrl}/get-recent-bookings?userId=${userId}`);
   }
 
-  getAllRoomsAvailability(endTime?: string) {
-    return this.http.get<any>(`${this.apiUrl}/get-all-rooms-availability?endTime=${endTime}`);
+  getAllRoomsAvailability(startTime?: string,endTime?: string) {
+    return this.http.get<any>(`${this.apiUrl}/get-all-rooms-availability?startTime=${startTime}&endTime=${endTime}`);
   }
 
 }
