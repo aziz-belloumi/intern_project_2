@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as RoomAvailabilitySelectors from '../../../state/room-availability/room-availability.selectors';
 import { Store } from '@ngrx/store';
+import {CustomPopupComponent} from "../custom-popup/custom-popup.component"; // adjust path
 
 interface Room {
   roomId: number;
@@ -13,12 +14,15 @@ interface Room {
 @Component({
   selector: 'app-resource-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CustomPopupComponent],
   templateUrl: './resource-table.component.html',
   styleUrls: ['./resource-table.component.css']
 })
 export class ResourceTableComponent {
   rooms$ = this.store.select(RoomAvailabilitySelectors.selectAllRooms);
+
+  isPopupVisible = false;
+  selectedRoom: Room | null = null;
 
   constructor(private store: Store) {}
 
@@ -36,8 +40,19 @@ export class ResourceTableComponent {
 
   reserveRoom(room: Room) {
     if (room.status.toLowerCase() === 'available') {
-      console.log(`Reserving Room ${room.roomId}`);
+      this.selectedRoom = room;
+      this.isPopupVisible = true;
     }
   }
 
+  closePopup() {
+    this.isPopupVisible = false;
+    this.selectedRoom = null;
+  }
+
+  onBookingConfirmed(event: { startTime: string; endTime: string }) {
+    console.log(`Room ${this.selectedRoom?.roomId} reserved:`, event);
+    // 🔗 Call backend service here with room + event.startTime + event.endTime
+    this.closePopup();
+  }
 }

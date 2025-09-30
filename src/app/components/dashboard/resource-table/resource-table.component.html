@@ -40,4 +40,11 @@
       </tbody>
     </table>
   </div>
+  <!-- Reservation Popup -->
+  <app-custom-popup
+    [isVisible]="isPopupVisible"
+    closeButtonText="X"
+    (closed)="closePopup()"
+    (bookingConfirmed)="onBookingConfirmed($event)">
+  </app-custom-popup>
 </div>

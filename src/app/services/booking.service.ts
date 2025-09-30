@@ -11,6 +11,9 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
+  createBooking(booking: Booking): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/create-booking`, booking);
+  }
 
   getUserBookings(userId: number, lastBookingId: number = 0): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${this.apiUrl}/get-all-bookings-of-user-by-chunks?userId=${userId}&lastBookingId=${lastBookingId}`);
