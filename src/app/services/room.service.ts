@@ -21,6 +21,11 @@ export class RoomService {
     return this.http.get<Room>(`${this.apiUrl}/${id}`);
   }
 
+  getUserRooms(userId: number): Observable<Room[]> {
+    return this.http.get<Room[]>(`${this.apiUrl}/get-user-rooms?userId=${userId}`);
+  }
+
+
 
   createRoom(room: Partial<Room>): Observable<Room> {
     return this.http.post<Room>(`${this.apiUrl}/create-room`, room);

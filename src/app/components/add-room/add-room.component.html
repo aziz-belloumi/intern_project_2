@@ -1,12 +1,14 @@
 <main class="main-content">
+  <!-- Add Room Form -->
   <div class="form-container">
     <div class="form-header">
       <h2 class="form-title">Add New Room</h2>
       <p class="form-description">Fill in the details below to add a new room to your booking system</p>
     </div>
 
+    <!-- Success Message -->
     <div class="success-message" *ngIf="successMessage">
-      Room has been successfully added to the system!
+      ✅ Room has been successfully added!
     </div>
 
     <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm)">
@@ -27,6 +29,10 @@
             <option value="training">Training Room</option>
             <option value="interview">Interview Room</option>
             <option value="flex">Flexible Room</option>
+            <option value="conference">Conference Room</option>
+            <option value="boardroom">Boardroom</option>
+            <option value="presentation">Presentation Room</option>
+            <option value="huddle">Huddle Room</option>
             <option value="other">Other</option>
           </select>
         </div>
@@ -41,7 +47,7 @@
           <div class="form-hint">Cost per minute for booking this room</div>
         </div>
 
-        <!-- Equipment & Features -->
+        <!-- Equipment -->
         <div class="form-group">
           <label class="form-label">Available Equipment</label>
           <div class="checkbox-group">
@@ -60,7 +66,7 @@
       <!-- Description -->
       <div class="form-group full-width">
         <label class="form-label required">Room Description</label>
-        <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the room features, location, and any special amenities..."></textarea>
+        <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the room..."></textarea>
       </div>
 
       <!-- Form Actions -->
@@ -69,5 +75,47 @@
         <button type="button" class="btn btn-secondary" (click)="onCancel(addRoomForm)">Cancel</button>
       </div>
     </form>
+  </div>
+
+  <!-- My Rooms Section -->
+  <div class="my-rooms-container">
+    <div class="form-header">
+      <h2 class="form-title">My Rooms</h2>
+      <p class="form-description">Manage your existing rooms</p>
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info">
+      <span class="results-count">Showing {{ userRooms.length }} rooms</span>
+    </div>
+
+    <!-- No Rooms -->
+    <div *ngIf="userRooms.length === 0" class="no-results">
+      <h3>No rooms yet</h3>
+      <p>Add your first room using the form above</p>
+    </div>
+
+    <!-- Rooms Grid -->
+    <div class="rooms-container grid-view" *ngIf="userRooms.length > 0">
+      <div *ngFor="let room of userRooms" class="room-card">
+        <div class="room-header">
+          <h3 class="room-title">Room {{ room.id }} - {{ formatRoomType(room.roomType) }}</h3>
+          <div class="room-price">${{ room.pricePerMinute.toFixed(2) }}/min</div>
+        </div>
+
+        <p class="room-description">{{ room.description }}</p>
+
+        <div class="room-features">
+          <span *ngIf="room.hasProjector" class="feature-tag projector">Projector</span>
+          <span *ngIf="room.hasWhiteboard" class="feature-tag whiteboard">Whiteboard</span>
+          <span *ngIf="!room.hasProjector && !room.hasWhiteboard" class="feature-tag basic">Basic Setup</span>
+        </div>
+
+        <div class="room-actions">
+          <button class="btn btn-primary btn-small" (click)="openUpdatePopup(room)">Update</button>
+          <button class="btn btn-danger btn-small" (click)="deleteRoom(room.id)">Delete</button>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
