@@ -141,7 +141,7 @@
     "ContainingType": "BookingSystem.Api.Controllers.RoomController",
     "Method": "DeleteRoom",
     "RelativePath": "api/Room/delete-room",
-    "HttpMethod": "GET",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -194,6 +194,22 @@
     "Parameters": [
       {
         "Name": "roomId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.RoomController",
+    "Method": "GetUserRooms",
+    "RelativePath": "api/Room/get-user-rooms",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
         "Type": "System.Int32",
         "IsRequired": false
       }

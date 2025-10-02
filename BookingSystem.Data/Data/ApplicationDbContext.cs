@@ -46,6 +46,49 @@ namespace BookingSystem.Data.Data
                 entity.HasIndex(u => u.PhoneNumber)
                       .IsUnique();
             });
+
+            modelBuilder.Entity<Room>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+
+                entity.Property(r => r.Description)
+                      .IsRequired();
+
+                entity.Property(r => r.RoomType)
+                      .IsRequired();
+
+                entity.Property(r => r.PricePerMinute)
+                      .HasColumnType("decimal(18,2)");
+
+                // Relationship: Room -> User
+                entity.HasOne(r => r.User)
+                      .WithMany()
+                      .HasForeignKey(r => r.UserId)
+                      .OnDelete(DeleteBehavior.Restrict); // <- avoid multiple cascade paths
+                entity.Property(r => r.UserId)
+                      .IsRequired(false);
+            });
+
+
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+
+                entity.Property(b => b.TotalPrice)
+                      .HasColumnType("decimal(18,2)");
+
+                // Relationship: Booking -> Room
+                entity.HasOne(b => b.Room)
+                      .WithMany(r => r.Bookings)
+                      .HasForeignKey(b => b.RoomId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Relationship: Booking -> User
+                entity.HasOne(b => b.User)
+                      .WithMany()
+                      .HasForeignKey(b => b.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }

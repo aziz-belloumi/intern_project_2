@@ -1,4 +1,6 @@
-﻿namespace BookingSystem.Data.Models
+﻿using System.Text.Json.Serialization;
+
+namespace BookingSystem.Data.Models
 {
     public class Room
     {
@@ -10,7 +12,10 @@
         public required string Description { get; set; }
         public required decimal PricePerMinute { get; set; }
 
-
+        public int? UserId { get; set; }    // foreign key
+        [JsonIgnore]
+        public User? User { get; set; } 
+        [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>(); // bookings associated with the room
     }
 }

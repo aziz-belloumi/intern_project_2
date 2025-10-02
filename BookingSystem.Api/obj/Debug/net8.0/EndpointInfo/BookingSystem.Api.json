@@ -250,6 +250,28 @@
         }
       }
     },
+    "/api/Room/get-user-rooms": {
+      "get": {
+        "tags": [
+          "Room"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Room/edit-room": {
       "put": {
         "tags": [
@@ -292,7 +314,7 @@
       }
     },
     "/api/Room/delete-room": {
-      "get": {
+      "delete": {
         "tags": [
           "Room"
         ],
@@ -520,11 +542,9 @@
             "type": "number",
             "format": "double"
           },
-          "bookings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Booking"
-            },
+          "userId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

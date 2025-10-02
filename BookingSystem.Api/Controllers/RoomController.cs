@@ -72,6 +72,24 @@ namespace BookingSystem.Api.Controllers
             }
         }
 
+        [HttpGet("get-user-rooms")]
+        public async Task<IActionResult> GetUserRooms(int userId)
+        {
+            try
+            {
+                var result = await _roomService.GetUserRoomsAsync(userId);
+                if (result == null)
+                {
+                    return BadRequest(new { message = "There is a problem in fetching user rooms" });
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
 
         [HttpPut("edit-room")]
         public async Task<IActionResult> EditRoom(int roomId , Room updatedRoom)
@@ -91,7 +109,7 @@ namespace BookingSystem.Api.Controllers
             }
         }
 
-        [HttpGet("delete-room")]
+        [HttpDelete("delete-room")]
         public async Task<IActionResult> DeleteRoom(int roomId)
         {
             try

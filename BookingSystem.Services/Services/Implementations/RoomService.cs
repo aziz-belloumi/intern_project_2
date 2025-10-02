@@ -61,6 +61,20 @@ namespace BookingSystem.Services.Services.Implementations
             }
         }
 
+        public async Task<List<Room>?> GetUserRoomsAsync(int userId)
+        {
+            try
+            {
+                return await _context.Rooms
+                    .Where(r => r.UserId == userId)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> EditRoomAsync(int roomId , Room updatedRoom)
         {
             try
