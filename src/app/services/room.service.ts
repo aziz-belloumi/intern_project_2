@@ -18,7 +18,7 @@ export class RoomService {
 
 
   getRoom(id: number): Observable<Room> {
-    return this.http.get<Room>(`${this.apiUrl}/${id}`);
+    return this.http.get<Room>(`${this.apiUrl}/get-room?roomId=${id}`);
   }
 
   getUserRooms(userId: number): Observable<Room[]> {
@@ -33,11 +33,11 @@ export class RoomService {
 
 
   updateRoom(id: number, room: Partial<Room>): Observable<Room> {
-    return this.http.put<Room>(`${this.apiUrl}/${id}`, room);
+    return this.http.put<Room>(`${this.apiUrl}/edit-room?roomId=${id}`, room);
   }
 
 
   deleteRoom(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete-room?roomId=${id}`);
   }
 }

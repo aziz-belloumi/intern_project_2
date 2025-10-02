@@ -34,7 +34,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
         this.user = user;
-        console.log(user);
         if (user?.PreferredRoomIds && user.PreferredRoomIds.trim().length > 0) {
           this.preferredRoomIds = user.PreferredRoomIds
             .split(',')

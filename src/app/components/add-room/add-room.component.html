@@ -3,24 +3,20 @@
   <div class="form-container">
     <div class="form-header">
       <h2 class="form-title">Add New Room</h2>
-      <p class="form-description">Fill in the details below to add a new room to your booking system</p>
+      <p class="form-description">Fill in the details below to add a new room</p>
     </div>
 
-    <!-- Success Message -->
     <div class="success-message" *ngIf="successMessage">
-      ✅ Room has been successfully added!
+      ✅ Operation was successful!
     </div>
 
     <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm)">
       <div class="form-grid">
-        <!-- Room Capacity -->
         <div class="form-group">
           <label class="form-label required">Room Capacity</label>
           <input type="number" class="form-input" name="capacity" ngModel required min="1" max="100" placeholder="e.g., 10">
-          <div class="form-hint">Maximum number of people the room can accommodate</div>
         </div>
 
-        <!-- Room Type -->
         <div class="form-group">
           <label class="form-label required">Room Type</label>
           <select class="form-select" name="roomType" ngModel required>
@@ -37,17 +33,14 @@
           </select>
         </div>
 
-        <!-- Price Per Minute -->
         <div class="form-group">
           <label class="form-label required">Price Per Minute</label>
           <div class="price-input-group">
             <span class="currency-symbol">$</span>
-            <input type="number" class="form-input price-input" name="pricePerMinute" ngModel required step="0.01" min="0" placeholder="0.75">
+            <input type="number" class="form-input price-input" name="pricePerMinute" ngModel required step="0.01" min="0">
           </div>
-          <div class="form-hint">Cost per minute for booking this room</div>
         </div>
 
-        <!-- Equipment -->
         <div class="form-group">
           <label class="form-label">Available Equipment</label>
           <div class="checkbox-group">
@@ -63,13 +56,11 @@
         </div>
       </div>
 
-      <!-- Description -->
       <div class="form-group full-width">
         <label class="form-label required">Room Description</label>
         <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the room..."></textarea>
       </div>
 
-      <!-- Form Actions -->
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Add Room</button>
         <button type="button" class="btn btn-secondary" (click)="onCancel(addRoomForm)">Cancel</button>
@@ -84,18 +75,11 @@
       <p class="form-description">Manage your existing rooms</p>
     </div>
 
-    <!-- Results Info -->
-    <div class="results-info">
-      <span class="results-count">Showing {{ userRooms.length }} rooms</span>
-    </div>
-
-    <!-- No Rooms -->
     <div *ngIf="userRooms.length === 0" class="no-results">
       <h3>No rooms yet</h3>
       <p>Add your first room using the form above</p>
     </div>
 
-    <!-- Rooms Grid -->
     <div class="rooms-container grid-view" *ngIf="userRooms.length > 0">
       <div *ngFor="let room of userRooms" class="room-card">
         <div class="room-header">
@@ -115,6 +99,67 @@
           <button class="btn btn-primary btn-small" (click)="openUpdatePopup(room)">Update</button>
           <button class="btn btn-danger btn-small" (click)="deleteRoom(room.id)">Delete</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Popup -->
+  <div class="popup-overlay" *ngIf="showUpdatePopup && selectedRoom">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3 class="popup-title">Update Room {{selectedRoom.id}}</h3>
+        <button class="popup-close" (click)="discardUpdate()">✕</button>
+      </div>
+
+      <div class="popup-body">
+        <form #updateForm="ngForm">
+          <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" name="capacity" [(ngModel)]="selectedRoom.capacity" required min="1">
+          </div>
+
+          <div class="form-group">
+            <label>Room Type</label>
+            <select name="roomType" [(ngModel)]="selectedRoom.roomType" required [ngModelOptions]="{standalone: true}">
+              <option value="" disabled selected>Select a room type</option>
+              <option value="meeting">Meeting Room</option>
+              <option value="training">Training Room</option>
+              <option value="interview">Interview Room</option>
+              <option value="flex">Flexible Room</option>
+              <option value="conference">Conference Room</option>
+              <option value="boardroom">Boardroom</option>
+              <option value="presentation">Presentation Room</option>
+              <option value="huddle">Huddle Room</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label>Price Per Minute</label>
+            <input type="number" name="pricePerMinute" [(ngModel)]="selectedRoom.pricePerMinute" required step="0.01" min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Has Projector</label>
+            <input type="checkbox" [(ngModel)]="selectedRoom.hasProjector" name="hasProjector">
+          </div>
+
+          <div class="form-group">
+            <label>Has Whiteboard</label>
+            <input type="checkbox" [(ngModel)]="selectedRoom.hasWhiteboard" name="hasWhiteboard">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" [(ngModel)]="selectedRoom.description" required></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="popup-footer">
+        <button class="btn btn-secondary" (click)="discardUpdate()">Discard</button>
+        <button class="btn btn-primary" (click)="confirmUpdate()">Confirm</button>
       </div>
     </div>
   </div>

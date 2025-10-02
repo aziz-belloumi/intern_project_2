@@ -4,16 +4,11 @@ import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import * as RoomActions from "../../state/room/room.actions";
 import {RoomService} from "../../services/room.service";
+import {Observable} from "rxjs";
+import {User} from "../../models/user.model";
+import * as AuthSelectors from "../../state/auth/auth.selectors";
+import {Room} from "../../models/room.model";
 
-export interface Room {
-  id: number;
-  capacity: number;
-  roomType: string;
-  pricePerMinute: number;
-  hasProjector: boolean;
-  hasWhiteboard: boolean;
-  description: string;
-}
 
 @Component({
   selector: 'app-add-room',
@@ -24,15 +19,22 @@ export interface Room {
 })
 export class AddRoomPageComponent implements OnInit {
   successMessage = false;
-  showUpdatePopup = false;
-
-  // User's rooms
+  currentUser!: User; // fetched once
+  currentUserId!: number;
   userRooms: Room[] = [];
 
+  selectedRoom!: Room | null;
+  showUpdatePopup = false;
 
-  constructor(private store: Store , private roomService: RoomService ) {}
+
+  constructor(private store: Store , private roomService: RoomService ) {
+    this.store.select(AuthSelectors.selectUser).subscribe(user => {
+      if (user) this.currentUser = user;
+    });
+  }
 
   ngOnInit(): void {
+    this.currentUserId = this.currentUser.id;
     this.loadUserRooms();
   }
 
@@ -49,7 +51,6 @@ export class AddRoomPageComponent implements OnInit {
     });
   }
 
-  // add the user id in the request !!!!!!!!!!!!!!!!!!!!!!!!!!!
   onSubmit(form: NgForm) {
     if (form.valid) {
       const roomData = {
@@ -58,7 +59,8 @@ export class AddRoomPageComponent implements OnInit {
         pricePerMinute: form.value.pricePerMinute,
         hasProjector: !!form.value.hasProjector,
         hasWhiteboard: !!form.value.hasWhiteboard,
-        description: form.value.description
+        description: form.value.description,
+        userId: 1
       };
 
       this.store.dispatch(RoomActions.createRoom({ room: roomData }));
@@ -69,8 +71,7 @@ export class AddRoomPageComponent implements OnInit {
       // Hide success message after 3 seconds
       setTimeout(() => {
         this.successMessage = false;
-      }, 3000);
-
+      }, 2000);
       form.resetForm();
 
       // Reload rooms to show the new one
@@ -99,38 +100,34 @@ export class AddRoomPageComponent implements OnInit {
   }
 
   openUpdatePopup(room: Room): void {
-    // this.selectedRoom = { ...room }; // Create a copy to avoid direct modification
-    // this.showUpdatePopup = true;
+    this.selectedRoom = { ...room };
+    this.showUpdatePopup = true;
   }
 
-  closeUpdatePopup(): void {
+  confirmUpdate(): void {
+    if (!this.selectedRoom) return;
+
+    this.roomService.updateRoom(this.selectedRoom.id!, this.selectedRoom)
+      .subscribe({
+        next: (success) => {
+          if (success) {
+            const index = this.userRooms.findIndex(r => r.id === this.selectedRoom!.id);
+            if (index !== -1) this.userRooms[index] = { ...this.selectedRoom! };
+
+            this.showUpdatePopup = false;
+            this.selectedRoom = null;
+
+            this.successMessage = true;
+            setTimeout(() => this.successMessage = false, 3000);
+          }
+        },
+        error: (err) => console.error("Update failed", err)
+      });
+  }
+
+  discardUpdate(): void {
     this.showUpdatePopup = false;
-  }
-
-  onUpdate(form: NgForm): void {
-    // if (form.valid) {
-    //   // Dispatch update action to store
-    //   // this.store.dispatch(RoomActions.updateRoom({
-    //   //   id: this.selectedRoom.id,
-    //   //   room: this.selectedRoom
-    //   // }));
-    //
-    //   console.log("Updating room:", this.selectedRoom);
-    //
-    //   // Update the room in the local array
-    //   const index = this.userRooms.findIndex(r => r.id === this.selectedRoom.id);
-    //   if (index !== -1) {
-    //     this.userRooms[index] = { ...this.selectedRoom };
-    //   }
-    //
-    //   this.closeUpdatePopup();
-    //
-    //   // Show success message
-    //   this.successMessage = true;
-    //   setTimeout(() => {
-    //     this.successMessage = false;
-    //   }, 3000);
-    // }
+    this.selectedRoom = null;
   }
 
   deleteRoom(roomId: number): void {
@@ -139,7 +136,6 @@ export class AddRoomPageComponent implements OnInit {
     );
 
     if (confirmed) {
-      // Dispatch delete action to store
       this.store.dispatch(RoomActions.deleteRoom({ id: roomId }));
 
       console.log("Deleting room:", roomId);
@@ -153,4 +149,5 @@ export class AddRoomPageComponent implements OnInit {
         this.successMessage = false;
       }, 3000);
     }
+
   }}
