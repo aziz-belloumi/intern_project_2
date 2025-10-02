@@ -58,6 +58,37 @@
         }
       }
     },
+    "/api/Booking/create-booking": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Booking"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Booking/get-user-statistics": {
       "get": {
         "tags": [
@@ -355,9 +386,7 @@
     "schemas": {
       "Booking": {
         "required": [
-          "purpose",
-          "room",
-          "user"
+          "purpose"
         ],
         "type": "object",
         "properties": {
@@ -369,15 +398,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
           "roomId": {
             "type": "integer",
             "format": "int32"
-          },
-          "room": {
-            "$ref": "#/components/schemas/Room"
           },
           "purpose": {
             "type": "string",

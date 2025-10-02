@@ -1,4 +1,6 @@
-﻿namespace BookingSystem.Data.Models
+﻿using System.Text.Json.Serialization;
+
+namespace BookingSystem.Data.Models
 {
 
 
@@ -13,11 +15,13 @@
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-        public required  User User { get; set; }
+        public int UserId { get; set; } // you need to apply a migration at first
+        [JsonIgnore]
+        public User? User { get; set; }
 
         public int RoomId { get; set; }
-        public required Room Room { get; set; }
+        [JsonIgnore]
+        public Room? Room { get; set; }
 
         public required string Purpose { get; set; }
 

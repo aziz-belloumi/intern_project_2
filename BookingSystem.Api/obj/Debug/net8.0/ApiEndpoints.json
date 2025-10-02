@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "Create",
+    "RelativePath": "api/Booking/create-booking",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "booking",
+        "Type": "BookingSystem.Data.Models.Booking",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
     "Method": "GetAllBookings",
     "RelativePath": "api/Booking/get-all-bookings-of-user-by-chunks",
     "HttpMethod": "GET",

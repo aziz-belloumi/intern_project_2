@@ -53,14 +53,25 @@ namespace BookingSystem.Api.Controllers
             }
         }
 
-        /*[HttpPost("create-booking")]
-        public async Task<IActionResult> Create(Booking booking)
+        [HttpPost("create-booking")]
+        public async Task<IActionResult> Create([FromBody] Booking booking)
         {
+            if (!ModelState.IsValid)
+            {
+                // This will return detailed validation errors
+                return BadRequest(ModelState);
+            }
+
             var created = await _bookingService.CreateBookingAsync(booking);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+
+            if (!created)
+                return BadRequest(new { message = "Booking could not be created." });
+
+            return Ok(booking); // return the created booking object
         }
 
-        [HttpPut("update-booking/{id}")]
+
+        /*[HttpPut("update-booking/{id}")]
         public async Task<IActionResult> Update(int id, Booking booking)
         {
             var updated = await _bookingService.UpdateBookingAsync(id, booking);

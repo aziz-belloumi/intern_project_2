@@ -101,7 +101,7 @@ namespace BookingSystem.Services.Services.Implementations
             }
         }
 
-        public async Task<bool> UpdateBookingAsync(int id, Booking booking)
+        /*public async Task<bool> UpdateBookingAsync(int id, Booking booking)
         {
             var existingBooking = await _context.Bookings.FindAsync(id);
             if (existingBooking == null) return false;
@@ -116,7 +116,7 @@ namespace BookingSystem.Services.Services.Implementations
 
             await _context.SaveChangesAsync();
             return true;
-        }
+        }*/
 
 
         public async Task<List<decimal>?> GetUserStatisticsAsync(int userId)
@@ -265,7 +265,7 @@ namespace BookingSystem.Services.Services.Implementations
                     result.Add(new
                     {
                         RoomId = room.Id,
-                        Capacity = room.Capacity,
+                        PricePerMinute = room.PricePerMinute,
                         Status = "Available",
                         Message = "This room is available for you"
                     });
@@ -280,11 +280,9 @@ namespace BookingSystem.Services.Services.Implementations
                     result.Add(new
                     {
                         RoomId = room.Id,
-                        Capacity = room.Capacity,
+                        PricePerMinute = room.PricePerMinute,
                         Status = "Not Available",
-                        Message = $"Reserved from {confirmedBooking.StartTime:G} to {confirmedBooking.EndTime:G}",
-                        StartTime = confirmedBooking.StartTime,
-                        EndTime = confirmedBooking.EndTime
+                        Message = $"Reserved from {confirmedBooking.StartTime:G} to {confirmedBooking.EndTime:G}"
                     });
                 }
                 else if (roomBookings.Any(b => b.Status == BookingStatus.Pending))
@@ -293,11 +291,9 @@ namespace BookingSystem.Services.Services.Implementations
                     result.Add(new
                     {
                         RoomId = room.Id,
-                        Capacity = room.Capacity,
+                        PricePerMinute = room.PricePerMinute,
                         Status = "Pending",
-                        Message = "Still waiting for confirmation",
-                        StartTime = pendingBooking.StartTime,
-                        EndTime = pendingBooking.EndTime
+                        Message = $"Still waiting for confirmation, it will be booked from {pendingBooking.StartTime:G} to {pendingBooking.EndTime:G}"
                     });
                 }
                 else
@@ -305,7 +301,7 @@ namespace BookingSystem.Services.Services.Implementations
                     result.Add(new
                     {
                         RoomId = room.Id,
-                        Capacity = room.Capacity,
+                        PricePerMinute = room.PricePerMinute,
                         Status = "Available",
                         Message = "This room is available for you"
                     });
