@@ -1,28 +1,45 @@
 <div class="resource-table-container">
-  <h2 class="section-title">Rooms</h2>
+  <!-- Header section with title and filters -->
+  <div class="table-header">
+    <h2 class="section-title">Rooms</h2>
+
+    <!-- Filters Section -->
+    <div class="filters">
+      <div class="filter-item">
+        <label for="startTime">Start Time:</label>
+        <input id="startTime" type="datetime-local" [(ngModel)]="startTime" />
+      </div>
+
+      <div class="filter-item">
+        <label for="endTime">End Time:</label>
+        <input id="endTime" type="datetime-local" [(ngModel)]="endTime" />
+      </div>
+
+      <button class="check-btn" (click)="loadAvailability()">Check Availability</button>
+    </div>
+  </div>
 
   <div class="table-wrapper" *ngIf="rooms$ | async as rooms">
     <table class="resource-table">
       <thead>
       <tr>
         <th>Room</th>
-        <th>Capacity</th>
+        <th>Price Per Minute</th>
         <th>Availability</th>
-        <th>Message</th>
-        <th>Reserve</th>
+        <th>Message & Action</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let room of rooms">
         <td>Room {{ room.roomId }}</td>
-        <td>{{ room.capacity }}</td>
+        <td>{{ room.pricePerMinute }} $</td>
         <td>
             <span class="availability-badge">
               {{ getStatusIcon(room.status) }} {{ getStatusText(room.status) }}
             </span>
         </td>
-        <td>{{ room.message }}</td>
-        <td>
+        <td class="message-action-cell">
+          <span class="message-text">{{ room.message }}</span>
           <button
             class="reserve-btn"
             [disabled]="room.status.toLowerCase() !== 'available'"
@@ -40,6 +57,7 @@
       </tbody>
     </table>
   </div>
+
   <!-- Reservation Popup -->
   <app-custom-popup
     [isVisible]="isPopupVisible"

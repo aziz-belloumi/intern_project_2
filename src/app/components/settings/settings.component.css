@@ -1,0 +1,376 @@
+/* Import base styles from explore component */
+.page-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.explore-container {
+  flex: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page Header */
+.explore-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-subtitle {
+  color: #666;
+  font-size: 1.3rem;
+}
+
+/* Search Section (repurposed as settings sections) */
+.search-section {
+  background: #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  color: #0000FF;
+}
+
+.section-title h2 {
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Form Styles */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filter-select {
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #0000FF;
+  box-shadow: 0 0 0 3px rgba(0, 0, 255, 0.1);
+}
+
+.filter-textarea {
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.filter-textarea:focus {
+  outline: none;
+  border-color: #0000FF;
+  box-shadow: 0 0 0 3px rgba(0, 0, 255, 0.1);
+}
+
+.helper-text {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Notification Options */
+.notification-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-left: 0;
+}
+
+.equipment-filter {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.equipment-filter input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #0000FF;
+  margin-right: 0.5rem;
+}
+
+.equipment-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+/* Action Buttons */
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.action-buttons {
+  border-bottom: none;
+  padding-bottom: 0;
+  justify-content: flex-end;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-primary {
+  background: #0000FF;
+  color: white;
+  min-width: 160px;
+}
+
+.btn-primary:hover {
+  background: #0000CC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.2);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #0000FF;
+  border: 2px solid #0000FF;
+  min-width: 120px;
+}
+
+.btn-outline:hover {
+  background: #0000FF;
+  color: white;
+}
+
+/* Account Actions */
+.account-actions {
+  padding: 2rem 0;
+  text-align: center;
+  border-top: 2px solid #e9ecef;
+  margin-top: 2rem;
+}
+
+.danger-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #dc2626;
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.danger-link:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.danger-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .button-group {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .notification-options {
+    gap: 0.75rem;
+  }
+
+  .search-section {
+    padding: 1rem;
+  }
+
+  .section-title h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    gap: 0.5rem;
+  }
+
+  .section-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .filter-select,
+  .filter-textarea {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Focus States for Accessibility */
+.btn:focus,
+.filter-select:focus,
+.filter-textarea:focus,
+.equipment-filter input:focus,
+.danger-link:focus {
+  outline: 2px solid #0000FF;
+  outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+.btn,
+.filter-select,
+.filter-textarea,
+.danger-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Scrollbar */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e9ecef;
+  border-top: 4px solid #0000FF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -20,16 +20,8 @@ export class HeaderComponent {
     console.log('Searching for:', this.searchQuery);
   }
 
-  showHelp() {
-    console.log('Help clicked');
-  }
-
   showNotifications() {
     console.log('Notifications clicked');
-  }
-
-  showSettings() {
-    console.log('Settings clicked');
   }
 
   showProfile() {

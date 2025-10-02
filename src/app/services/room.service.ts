@@ -23,7 +23,7 @@ export class RoomService {
 
 
   createRoom(room: Partial<Room>): Observable<Room> {
-    return this.http.post<Room>(this.apiUrl, room);
+    return this.http.post<Room>(`${this.apiUrl}/create-room`, room);
   }
 
 

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as RoomAvailabilitySelectors from '../../../state/room-availability/room-availability.selectors';
+import * as RoomAvailabilityActions from '../../../state/room-availability/room-availability.actions';
 import { Store } from '@ngrx/store';
-import {CustomPopupComponent} from "../custom-popup/custom-popup.component"; // adjust path
+import { CustomPopupComponent } from "../custom-popup/custom-popup.component";
+import {FormsModule} from "@angular/forms";
 
 interface Room {
   roomId: number;
-  capacity: number;
+  pricePerMinute: number;
   status: string;
   message: string;
 }
@@ -14,7 +16,7 @@ interface Room {
 @Component({
   selector: 'app-resource-table',
   standalone: true,
-  imports: [CommonModule, CustomPopupComponent],
+  imports: [CommonModule, CustomPopupComponent, FormsModule],
   templateUrl: './resource-table.component.html',
   styleUrls: ['./resource-table.component.css']
 })
@@ -23,6 +25,9 @@ export class ResourceTableComponent {
 
   isPopupVisible = false;
   selectedRoom: Room | null = null;
+
+  startTime?: string;
+  endTime?: string;
 
   constructor(private store: Store) {}
 
@@ -54,5 +59,12 @@ export class ResourceTableComponent {
     console.log(`Room ${this.selectedRoom?.roomId} reserved:`, event);
     // 🔗 Call backend service here with room + event.startTime + event.endTime
     this.closePopup();
+  }
+
+  loadAvailability() {
+    this.store.dispatch(RoomAvailabilityActions.loadRoomAvailability({
+      startTime: this.startTime ? new Date(this.startTime).toISOString() : undefined,
+      endTime: this.endTime ? new Date(this.endTime).toISOString() : undefined
+    }));
   }
 }

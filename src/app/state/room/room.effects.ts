@@ -68,11 +68,4 @@ export class RoomEffects {
       )
     )
   );
-
-  webSocket$ = createEffect(() =>
-    this.socketService.events$.pipe(
-      filter(event => ['roomCreated','roomUpdated','roomDeleted'].includes(event.type)),
-      map(() => RoomActions.loadRooms()) // reload or update slice
-    )
-  );
 }

@@ -3,19 +3,6 @@
     <h1>Welcome Back</h1>
   </div>
 
-  <div class="header-center">
-    <div class="search-container">
-      <i class="search-icon"><mat-icon>search</mat-icon></i>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search resources..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearch($event)"
-      >
-    </div>
-  </div>
-
   <div class="header-right">
     <button class="header-btn notification-btn" (click)="showNotifications()">
       <mat-icon>notifications</mat-icon>

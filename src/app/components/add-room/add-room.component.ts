@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
+import {Store} from "@ngrx/store";
+import * as RoomActions from "../../state/room/room.actions";
 
 @Component({
   selector: 'app-add-room',
@@ -12,18 +14,21 @@ import {FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 export class AddRoomPageComponent {
   successMessage = false;
 
+  constructor(private store: Store) {}
+
   onSubmit(form: NgForm) {
     if (form.valid) {
-      const roomData = form.value;
-      console.log('Room data to submit:', roomData);
-
-      this.successMessage = true;
-
-      // Reset after 3 seconds
-      setTimeout(() => {
-        form.resetForm();
-        this.successMessage = false;
-      }, 3000);
+      const roomData = {
+        capacity: form.value.capacity,
+        roomType: form.value.roomType,
+        pricePerMinute: form.value.pricePerMinute,
+        hasProjector: !!form.value.hasProjector,
+        hasWhiteboard: !!form.value.hasWhiteboard,
+        description: form.value.description
+      };
+      this.store.dispatch(RoomActions.createRoom({room :roomData}));
+      console.log("roomData", roomData);
+      form.resetForm();
     }
   }
 
