@@ -70,97 +70,140 @@
 
   <!-- My Rooms Section -->
   <div class="my-rooms-container">
-    <div class="form-header">
-      <h2 class="form-title">My Rooms</h2>
-      <p class="form-description">Manage your existing rooms</p>
+    <div class="explore-header">
+      <p class="page-subtitle">Manage your existing rooms</p>
     </div>
 
+    <!-- Results Info -->
+    <div class="results-info" *ngIf="userRooms.length > 0">
+      <span class="results-count">Showing {{ userRooms.length }} rooms</span>
+    </div>
+
+    <!-- No Rooms Message -->
     <div *ngIf="userRooms.length === 0" class="no-results">
-      <h3>No rooms yet</h3>
+      <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <h3>No rooms found</h3>
       <p>Add your first room using the form above</p>
     </div>
 
+    <!-- Rooms Grid -->
     <div class="rooms-container grid-view" *ngIf="userRooms.length > 0">
       <div *ngFor="let room of userRooms" class="room-card">
-        <div class="room-header">
-          <h3 class="room-title">Room {{ room.id }} - {{ formatRoomType(room.roomType) }}</h3>
-          <div class="room-price">${{ room.pricePerMinute.toFixed(2) }}/min</div>
+        <div class="room-image">
+          <div class="room-type-badge">{{ formatRoomType(room.roomType) }}</div>
+          <div class="room-capacity-badge">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.999 2.999 0 0017 6c-1.66 0-3 1.34-3 3 0 .35.07.69.18 1H12c-1.11 0-2 .89-2 2v1H8.5c-.28 0-.5.22-.5.5s.22.5.5.5H10v6c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2z"/>
+            </svg>
+            {{ room.capacity }}
+          </div>
         </div>
 
-        <p class="room-description">{{ room.description }}</p>
+        <div class="room-content">
+          <div class="room-header">
+            <h3 class="room-title">Room {{ room.id }} - {{ formatRoomType(room.roomType) }}</h3>
+            <div class="room-price">${{ room.pricePerMinute.toFixed(2) }}/min</div>
+          </div>
 
-        <div class="room-features">
-          <span *ngIf="room.hasProjector" class="feature-tag projector">Projector</span>
-          <span *ngIf="room.hasWhiteboard" class="feature-tag whiteboard">Whiteboard</span>
-          <span *ngIf="!room.hasProjector && !room.hasWhiteboard" class="feature-tag basic">Basic Setup</span>
-        </div>
+          <p class="room-description">{{ room.description }}</p>
 
-        <div class="room-actions">
-          <button class="btn btn-primary btn-small" (click)="openUpdatePopup(room)">Update</button>
-          <button class="btn btn-danger btn-small" (click)="deleteRoom(room.id)">Delete</button>
+          <div class="room-features">
+            <span *ngIf="room.hasProjector" class="feature-tag projector">Projector</span>
+            <span *ngIf="room.hasWhiteboard" class="feature-tag whiteboard">Whiteboard</span>
+            <span *ngIf="!room.hasProjector && !room.hasWhiteboard" class="feature-tag basic">Basic Setup</span>
+          </div>
+
+          <div class="room-actions">
+            <button class="btn btn-primary" (click)="openUpdatePopup(room)">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+              Update
+            </button>
+            <button class="btn btn-outline" (click)="deleteRoom(room.id)">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+              </svg>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Update Popup -->
-  <div class="popup-overlay" *ngIf="showUpdatePopup && selectedRoom">
-    <div class="popup-content">
+  <div class="popup-overlay" *ngIf="showUpdatePopup && selectedRoom" (click)="discardUpdate()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
       <div class="popup-header">
-        <h3 class="popup-title">Update Room {{selectedRoom.id}}</h3>
-        <button class="popup-close" (click)="discardUpdate()">✕</button>
+        <h3 class="popup-title">Update Room {{ selectedRoom.id }}</h3>
+        <button class="popup-close" (click)="discardUpdate()">
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
       </div>
 
-      <div class="popup-body">
-        <form #updateForm="ngForm">
-          <div class="form-group">
-            <label>Capacity</label>
-            <input type="number" name="capacity" [(ngModel)]="selectedRoom.capacity" required min="1">
+      <form #updateForm="ngForm">
+        <div class="popup-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label required">Room Capacity</label>
+              <input type="number" class="form-input" name="capacity" [(ngModel)]="selectedRoom.capacity" required min="1" max="100">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label required">Room Type</label>
+              <select class="form-select" name="roomType" [(ngModel)]="selectedRoom.roomType" required>
+                <option value="">Select room type...</option>
+                <option value="meeting">Meeting Room</option>
+                <option value="training">Training Room</option>
+                <option value="interview">Interview Room</option>
+                <option value="flex">Flexible Room</option>
+                <option value="conference">Conference Room</option>
+                <option value="boardroom">Boardroom</option>
+                <option value="presentation">Presentation Room</option>
+                <option value="huddle">Huddle Room</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label required">Price Per Minute</label>
+              <div class="price-input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" class="form-input price-input" name="pricePerMinute" [(ngModel)]="selectedRoom.pricePerMinute" required step="0.01" min="0">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Available Equipment</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" name="hasProjector" [(ngModel)]="selectedRoom.hasProjector">
+                  <span class="checkbox-label">Has Projector</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" name="hasWhiteboard" [(ngModel)]="selectedRoom.hasWhiteboard">
+                  <span class="checkbox-label">Has Whiteboard</span>
+                </label>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label>Room Type</label>
-            <select name="roomType" [(ngModel)]="selectedRoom.roomType" required [ngModelOptions]="{standalone: true}">
-              <option value="" disabled selected>Select a room type</option>
-              <option value="meeting">Meeting Room</option>
-              <option value="training">Training Room</option>
-              <option value="interview">Interview Room</option>
-              <option value="flex">Flexible Room</option>
-              <option value="conference">Conference Room</option>
-              <option value="boardroom">Boardroom</option>
-              <option value="presentation">Presentation Room</option>
-              <option value="huddle">Huddle Room</option>
-              <option value="other">Other</option>
-            </select>
+          <div class="form-group full-width">
+            <label class="form-label required">Room Description</label>
+            <textarea class="form-textarea" name="description" [(ngModel)]="selectedRoom.description" required></textarea>
           </div>
+        </div>
 
-
-          <div class="form-group">
-            <label>Price Per Minute</label>
-            <input type="number" name="pricePerMinute" [(ngModel)]="selectedRoom.pricePerMinute" required step="0.01" min="0">
-          </div>
-
-          <div class="form-group">
-            <label>Has Projector</label>
-            <input type="checkbox" [(ngModel)]="selectedRoom.hasProjector" name="hasProjector">
-          </div>
-
-          <div class="form-group">
-            <label>Has Whiteboard</label>
-            <input type="checkbox" [(ngModel)]="selectedRoom.hasWhiteboard" name="hasWhiteboard">
-          </div>
-
-          <div class="form-group">
-            <label>Description</label>
-            <textarea name="description" [(ngModel)]="selectedRoom.description" required></textarea>
-          </div>
-        </form>
-      </div>
-
-      <div class="popup-footer">
-        <button class="btn btn-secondary" (click)="discardUpdate()">Discard</button>
-        <button class="btn btn-primary" (click)="confirmUpdate()">Confirm</button>
-      </div>
+        <div class="popup-footer">
+          <button type="button" class="btn btn-secondary" (click)="discardUpdate()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="confirmUpdate()">Save Changes</button>
+        </div>
+      </form>
     </div>
   </div>
 </main>

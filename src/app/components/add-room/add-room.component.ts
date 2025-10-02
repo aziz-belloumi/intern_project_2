@@ -4,7 +4,6 @@ import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import * as RoomActions from "../../state/room/room.actions";
 import {RoomService} from "../../services/room.service";
-import {Observable} from "rxjs";
 import {User} from "../../models/user.model";
 import * as AuthSelectors from "../../state/auth/auth.selectors";
 import {Room} from "../../models/room.model";
