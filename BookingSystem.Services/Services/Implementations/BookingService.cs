@@ -23,22 +23,14 @@ namespace BookingSystem.Services.Services.Implementations
         {
             try
             {
-                IQueryable<Booking> query = _context.Bookings
-                    .Where(b => b.UserId == userId);
-
-                // Determine the timestamp to continue from
+                IQueryable<Booking> query = _context.Bookings.Where(b => b.UserId == userId);
                 if (lastBookingId.HasValue && lastBookingId.Value > 0)
                 {
-                    var lastBooking = await _context.Bookings
-                        .Where(b => b.Id == lastBookingId.Value)
-                        .FirstOrDefaultAsync();
-
+                    var lastBooking = await _context.Bookings.FindAsync(lastBookingId.Value);
                     if (lastBooking != null)
-                    {
-                        var lastDate = lastBooking.UpdatedAt ?? lastBooking.CreatedAt;
-                        query = query.Where(b => (b.UpdatedAt ?? b.CreatedAt) < lastDate);
-                    }
+                        query = query.Where(b => (b.UpdatedAt ?? b.CreatedAt) < (lastBooking.UpdatedAt ?? lastBooking.CreatedAt));
                 }
+
                 var bookings = await query
                     .OrderByDescending(b => b.UpdatedAt ?? b.CreatedAt)
                     .Take(chunkSize)
@@ -60,12 +52,9 @@ namespace BookingSystem.Services.Services.Implementations
                         b.CreatedAt,
                         b.UpdatedAt
                     })
-                .ToListAsync<object>();
+                    .ToListAsync<object>();
 
-                if (bookings == null || !bookings.Any())
-                    return null;
-
-                return bookings;
+                return bookings.Any() ? bookings : null;
             }
             catch (Exception)
             {
@@ -90,33 +79,117 @@ namespace BookingSystem.Services.Services.Implementations
         {
             try
             {
+                booking.Status = BookingStatus.Pending;
+                booking.CreatedAt = DateTime.UtcNow;
+
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
-                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new { action = "bookingCreated" }));
+
+                // Broadcast to frontend
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
+                {
+                    action = "bookingCreated",
+                    bookingId = booking.Id,
+                    status = booking.Status
+                }));
+
+                // Start 2-minute pending timer (fire-and-forget)
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(2));
+                    var pendingBooking = await _context.Bookings.FindAsync(booking.Id);
+                    if (pendingBooking != null && pendingBooking.Status == BookingStatus.Pending)
+                    {
+                        pendingBooking.Status = BookingStatus.Cancelled;
+                        pendingBooking.UpdatedAt = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
+
+                        await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
+                        {
+                            action = "bookingCancelled",
+                            bookingId = pendingBooking.Id,
+                            status = pendingBooking.Status
+                        }));
+                    }
+                });
+
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
 
-        /*public async Task<bool> UpdateBookingAsync(int id, Booking booking)
+        public async Task<bool> ConfirmBookingPaymentAsync(int bookingId)
         {
-            var existingBooking = await _context.Bookings.FindAsync(id);
-            if (existingBooking == null) return false;
+            try
+            {
+                var booking = await _context.Bookings.FindAsync(bookingId);
+                if (booking == null || booking.Status != BookingStatus.Pending)
+                    return false;
 
-            // Update fields as needed, example:
-            existingBooking.Status = booking.Status;
-            existingBooking.Purpose = booking.Purpose;
-            existingBooking.StartTime = booking.StartTime;
-            existingBooking.EndTime = booking.EndTime;
-            existingBooking.UpdatedAt = DateTime.UtcNow;
-            // add others fields you want to update...
+                booking.Status = BookingStatus.Confirmed;
+                booking.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
-            return true;
-        }*/
+                await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
+                {
+                    action = "bookingConfirmed",
+                    bookingId = booking.Id,
+                    status = booking.Status
+                }));
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<object>?> GetPendingBookingsAsync(int userId)
+        {
+            try
+            {
+                var twoMinutesAgo = DateTime.UtcNow.AddMinutes(-2);
+
+                var pendingBookings = await _context.Bookings
+                    .Where(b => b.UserId == userId &&
+                                b.Status == BookingStatus.Pending &&
+                                b.CreatedAt >= twoMinutesAgo)
+                    .OrderByDescending(b => b.CreatedAt)
+                    .Select(b => new
+                    {
+                        b.Id,
+                        b.UserId,
+                        b.RoomId,
+                        b.Purpose,
+                        b.StartTime,
+                        b.EndTime,
+                        b.DurationMinutes,
+                        b.Attendees,
+                        b.IsPreferredRoom,
+                        b.IsPurposeCompatible,
+                        b.CapacityUtilization,
+                        b.TotalPrice,
+                        b.Status,
+                        b.CreatedAt,
+                        b.UpdatedAt
+                    })
+                    .ToListAsync<object>();
+
+                return pendingBookings.Any() ? pendingBookings : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
+
+
 
 
         public async Task<List<decimal>?> GetUserStatisticsAsync(int userId)

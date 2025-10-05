@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "Confirm",
+    "RelativePath": "api/Booking/confirm-booking/{bookingId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
     "Method": "Create",
     "RelativePath": "api/Booking/create-booking",
     "HttpMethod": "POST",
@@ -69,6 +85,22 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BookingSystem.Api.Controllers.BookingController",
+    "Method": "GetPendingBookings",
+    "RelativePath": "api/Booking/get-pending-bookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

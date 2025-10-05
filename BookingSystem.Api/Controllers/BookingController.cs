@@ -23,11 +23,7 @@ namespace BookingSystem.Api.Controllers
             try
             {
                 var bookings = await _bookingService.GetUserBookingsChunkAsync(userId, lastBookingId);
-                if (bookings != null && bookings.Any())
-                {
-                    return Ok(bookings);
-                }
-                return BadRequest(new { message = "There is a problem in all bookings fetching" });
+                return bookings != null ? Ok(bookings) : BadRequest(new { message = "No bookings found." });
             }
             catch (Exception e)
             {
@@ -56,28 +52,57 @@ namespace BookingSystem.Api.Controllers
         [HttpPost("create-booking")]
         public async Task<IActionResult> Create([FromBody] Booking booking)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                // This will return detailed validation errors
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    // This will return detailed validation errors
+                    return BadRequest(ModelState);
+                }
+
+                var created = await _bookingService.CreateBookingAsync(booking);
+
+                if (!created)
+                    return BadRequest(new { message = "Booking could not be created." });
+
+                return Ok(booking); // return the created booking object
             }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
 
-            var created = await _bookingService.CreateBookingAsync(booking);
+        [HttpPost("confirm-booking/{bookingId}")]
+        public async Task<IActionResult> Confirm(int bookingId)
+        {
+            var success = await _bookingService.ConfirmBookingPaymentAsync(bookingId);
+            if (!success)
+                return BadRequest(new { message = "Booking cannot be confirmed (already cancelled or confirmed)." });
 
-            if (!created)
-                return BadRequest(new { message = "Booking could not be created." });
+            return Ok(new { bookingId, status = "Confirmed" });
+        }
 
-            return Ok(booking); // return the created booking object
+        [HttpGet("get-pending-bookings")]
+        public async Task<IActionResult> GetPendingBookings([FromQuery] int userId)
+        {
+            try
+            {
+                var pendingBookings = await _bookingService.GetPendingBookingsAsync(userId);
+
+                if (pendingBookings == null || !pendingBookings.Any())
+                    return Ok(new { message = "No pending bookings found." });
+
+                return Ok(pendingBookings);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
         }
 
 
-        /*[HttpPut("update-booking/{id}")]
-        public async Task<IActionResult> Update(int id, Booking booking)
-        {
-            var updated = await _bookingService.UpdateBookingAsync(id, booking);
-            if (!updated) return NotFound();
-            return NoContent();
-        }*/
+
 
         [HttpGet("get-user-statistics")]
         public async Task<IActionResult> GetUserStatistics([FromQuery] int userId)
