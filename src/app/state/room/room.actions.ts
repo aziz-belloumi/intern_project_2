@@ -29,6 +29,20 @@ export const loadRoomFailure = createAction(
   props<{ error: any }>()
 );
 
+// load user rooms
+export const loadUserRooms = createAction(
+  '[Room] Load User Room',
+  props<{ userId: number }>()
+);
+export const loadUserRoomsSuccess = createAction(
+  '[Room] Load User Room Success',
+  props<{ rooms: Room[] }>()
+);
+export const loadUserRoomsFailure = createAction(
+  '[Room] Load User Room Failure',
+  props<{ error: any }>()
+);
+
 
 // create a room
 export const createRoom = createAction(

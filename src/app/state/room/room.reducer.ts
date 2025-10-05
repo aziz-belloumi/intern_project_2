@@ -1,30 +1,58 @@
+// src/app/state/room/room.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import * as RoomActions from './room.actions';
-import {initialState} from "./room.state";
+import { initialState } from './room.state';
 
 export const roomReducer = createReducer(
   initialState,
-  on(RoomActions.loadRooms, (state) => ({ ...state, loading: true })),
-  on(RoomActions.loadRoomsSuccess, (state, { rooms }) => ({ ...state,error: null, rooms, loading: false })),
 
-  on(RoomActions.loadRoom, (state) => ({ ...state, loading: true })),
-  on(RoomActions.loadRoomSuccess, (state, { room }) => ({ ...state,error: null, selectedRoom: room, loading: false })),
+  // load all rooms
+  on(RoomActions.loadRooms, state => ({ ...state, loading: true })),
+  on(RoomActions.loadRoomsSuccess, (state, { rooms }) => ({ ...state, rooms, loading: false, error: null })),
+  on(RoomActions.loadRoomsFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
-  on(RoomActions.createRoom, (state) => ({ ...state, loading: true })),
-  on(RoomActions.createRoomSuccess, (state, { room }) => ({ ...state,error: null, rooms: [...state.rooms, room],loading: false })),
+  // load single room
+  on(RoomActions.loadRoom, state => ({ ...state, loading: true })),
+  on(RoomActions.loadRoomSuccess, (state, { room }) => ({ ...state, selectedRoom: room, loading: false, error: null })),
+  on(RoomActions.loadRoomFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
-  on(RoomActions.updateRoom, (state) => ({ ...state, loading: true })),
-  on(RoomActions.updateRoomSuccess, (state, { room }) => ({...state, loading: false ,error: null,rooms: state.rooms.map(r => r.id === room.id ? room : r) ,selectedRoom: state.selectedRoom?.id === room.id ? room : state.selectedRoom })),
+  // load user rooms -> store into userRooms (NOT replacing the global rooms list)
+  on(RoomActions.loadUserRooms, state => ({ ...state, loading: true })),
+  on(RoomActions.loadUserRoomsSuccess, (state, { rooms }) => ({ ...state, userRooms: rooms, loading: false, error: null })),
+  on(RoomActions.loadUserRoomsFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
-  on(RoomActions.deleteRoom, (state) => ({ ...state, loading: true })),
-  on(RoomActions.deleteRoomSuccess, (state, { id }) => ({...state,loading: false , error: null, rooms: state.rooms.filter(r => r.id !== id), selectedRoom: state.selectedRoom?.id === id ? null : state.selectedRoom})),
+  // create
+  on(RoomActions.createRoom, state => ({ ...state, loading: true })),
+  on(RoomActions.createRoomSuccess, (state, { room }) => ({
+    ...state,
+    rooms: [...state.rooms, room],
+    loading: false,
+    error: null,
+  })),
+  on(RoomActions.createRoomFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
-  on(
-    RoomActions.loadRoomsFailure,
-    RoomActions.loadRoomFailure,
-    RoomActions.createRoomFailure,
-    RoomActions.updateRoomFailure,
-    RoomActions.deleteRoomFailure,
-    (state, { error }) => ({ ...state, error , loading: false })
-  )
+  // update
+  on(RoomActions.updateRoom, state => ({ ...state, loading: true })),
+  on(RoomActions.updateRoomSuccess, (state, { room }) => ({
+    ...state,
+    rooms: state.rooms.map(r => (r.id === room.id ? room : r)),
+    selectedRoom: state.selectedRoom?.id === room.id ? room : state.selectedRoom,
+    // optionally update userRooms if present
+    userRooms: state.userRooms.map(r => (r.id === room.id ? room : r)),
+    loading: false,
+    error: null,
+  })),
+  on(RoomActions.updateRoomFailure, (state, { error }) => ({ ...state, loading: false, error })),
+
+  // delete
+  on(RoomActions.deleteRoom, state => ({ ...state, loading: true })),
+  on(RoomActions.deleteRoomSuccess, (state, { id }) => ({
+    ...state,
+    rooms: state.rooms.filter(r => r.id !== id),
+    userRooms: state.userRooms.filter(r => r.id !== id),
+    selectedRoom: state.selectedRoom?.id === id ? null : state.selectedRoom,
+    loading: false,
+    error: null,
+  })),
+  on(RoomActions.deleteRoomFailure, (state, { error }) => ({ ...state, loading: false, error }))
 );

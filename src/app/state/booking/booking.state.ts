@@ -5,6 +5,7 @@ export interface BookingState {
   lastBookingId: number | null;
   recentBookings: Booking[];
   statistics: number[];
+  pendingBookings: Booking[];
   loading: boolean;
   error: any;
 }
@@ -14,6 +15,7 @@ export const initialState: BookingState = {
   lastBookingId: null,
   recentBookings: [],
   statistics: [],
+  pendingBookings: [],
   loading: false,
   error: null
 };

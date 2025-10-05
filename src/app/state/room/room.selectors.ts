@@ -25,3 +25,5 @@ export const selectRoomById = (id: number) => createSelector(
   selectAllRooms,
   (rooms) => rooms.find(room => room.id === id)
 );
+
+export const selectUserRooms = createSelector(selectRoomState, state => state.userRooms);

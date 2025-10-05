@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BookingService } from '../../services/booking.service';
 import * as RoomAvailabilityActions from './room-availability.actions';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import {of, tap} from 'rxjs';
+import {of} from 'rxjs';
 
 @Injectable()
 export class RoomAvailabilityEffects {
@@ -12,7 +12,6 @@ export class RoomAvailabilityEffects {
       ofType(RoomAvailabilityActions.loadRoomAvailability),
       mergeMap(action =>
         this.bookingService.getAllRoomsAvailability(action.startTime,action.endTime).pipe(
-          tap(response => console.log("********************************* Backend response: ", response)),
           map(response => RoomAvailabilityActions.loadRoomAvailabilitySuccess({ rooms: response.rooms })),
           catchError(error => of(RoomAvailabilityActions.loadRoomAvailabilityFailure({ error })))
         )

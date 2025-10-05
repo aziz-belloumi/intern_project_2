@@ -16,5 +16,16 @@ export const bookingReducer = createReducer(
 
   on(BookingActions.loadUserStatistics, state => ({ ...state, loading: true })),
   on(BookingActions.loadUserStatisticsSuccess, (state, { statistics }) => ({ ...state, statistics, loading: false })),
-  on(BookingActions.loadUserStatisticsFailure, (state, { error }) => ({ ...state, error, loading: false }))
+  on(BookingActions.loadUserStatisticsFailure, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(BookingActions.loadPendingBookings, state => ({ ...state, loading: true })),
+  on(BookingActions.loadPendingBookingsSuccess, (state, { pendingBookings }) => ({...state, pendingBookings, loading: false})),
+  on(BookingActions.loadPendingBookingsFailure, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(BookingActions.confirmBookingPayment, state => ({ ...state, loading: true })),
+  on(BookingActions.confirmBookingPaymentSuccess, (state, { bookingId }) => ({...state, pendingBookings: state.pendingBookings.filter(b => b.id !== bookingId),})),
+  on(BookingActions.confirmBookingPaymentFailure, (state, { error }) => ({ ...state, error, loading: false }))
+
+
+
 );

@@ -33,6 +33,18 @@ export class RoomEffects {
     )
   );
 
+  loadUserRooms$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RoomActions.loadUserRooms),
+      mergeMap(({ userId }) =>
+        this.roomService.getUserRooms(userId).pipe(
+          map(rooms => RoomActions.loadUserRoomsSuccess({ rooms })),
+          catchError(error => of(RoomActions.loadUserRoomsFailure({ error })))
+        )
+      )
+    )
+  );
+
   createRoom$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RoomActions.createRoom),

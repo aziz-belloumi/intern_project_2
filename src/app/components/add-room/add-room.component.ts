@@ -6,7 +6,9 @@ import * as RoomActions from "../../state/room/room.actions";
 import {RoomService} from "../../services/room.service";
 import {User} from "../../models/user.model";
 import * as AuthSelectors from "../../state/auth/auth.selectors";
+import * as RoomSelectors from "../../state/room/room.selectors";
 import {Room} from "../../models/room.model";
+import {SocketService} from "../../services/socket.service";
 
 
 @Component({
@@ -26,7 +28,7 @@ export class AddRoomPageComponent implements OnInit {
   showUpdatePopup = false;
 
 
-  constructor(private store: Store , private roomService: RoomService ) {
+  constructor(private store: Store , private roomService: RoomService, private socketService: SocketService ) {
     this.store.select(AuthSelectors.selectUser).subscribe(user => {
       if (user) this.currentUser = user;
     });
@@ -34,20 +36,10 @@ export class AddRoomPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserId = this.currentUser.id;
-    this.loadUserRooms();
-  }
-
-  loadUserRooms(): void {
-    const userId = 1; // 👈 replace with actual logged-in user ID
-    this.roomService.getUserRooms(userId).subscribe({
-      next: (rooms) => {
-        this.userRooms = rooms;
-        console.log("Fetched user rooms:", rooms);
-      },
-      error: (err) => {
-        console.error("Error fetching rooms", err);
-      }
+    this.store.select(RoomSelectors.selectUserRooms).subscribe(rooms => {
+      this.userRooms = rooms;
     });
+
   }
 
   onSubmit(form: NgForm) {
@@ -74,7 +66,7 @@ export class AddRoomPageComponent implements OnInit {
       form.resetForm();
 
       // Reload rooms to show the new one
-      this.loadUserRooms();
+      this.store.dispatch(RoomActions.loadUserRooms({ userId: this.currentUserId }));
     }
   }
 
@@ -110,8 +102,10 @@ export class AddRoomPageComponent implements OnInit {
       .subscribe({
         next: (success) => {
           if (success) {
-            const index = this.userRooms.findIndex(r => r.id === this.selectedRoom!.id);
-            if (index !== -1) this.userRooms[index] = { ...this.selectedRoom! };
+            // Create a new array with the updated room
+            this.userRooms = this.userRooms.map(r =>
+              r.id === this.selectedRoom!.id ? { ...this.selectedRoom! } : r
+            );
 
             this.showUpdatePopup = false;
             this.selectedRoom = null;
@@ -123,6 +117,7 @@ export class AddRoomPageComponent implements OnInit {
         error: (err) => console.error("Update failed", err)
       });
   }
+
 
   discardUpdate(): void {
     this.showUpdatePopup = false;

@@ -43,4 +43,29 @@ export class BookingEffects {
       )
     )
   );
+
+  loadPendingBookings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BookingActions.loadPendingBookings),
+      mergeMap(action =>
+        this.bookingService.getPendingBookings(action.userId).pipe(
+          map(pendingBookings => BookingActions.loadPendingBookingsSuccess({ pendingBookings })),
+          catchError(error => of(BookingActions.loadPendingBookingsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  confirmBookingPayment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BookingActions.confirmBookingPayment),
+      mergeMap(action =>
+        this.bookingService.confirmBookingPayment(action.bookingId).pipe(
+          map(() => BookingActions.confirmBookingPaymentSuccess({ bookingId: action.bookingId })),
+          catchError(error => of(BookingActions.confirmBookingPaymentFailure({ error })))
+        )
+      )
+    )
+  );
+
 }

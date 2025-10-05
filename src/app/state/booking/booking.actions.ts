@@ -16,6 +16,37 @@ export const loadUserBookingsFailure = createAction(
   props<{ error: any }>()
 );
 
+// --- Get Pending Bookings ---
+export const loadPendingBookings = createAction(
+  '[Booking] Load Pending Bookings',
+  props<{ userId: number }>()
+);
+
+export const loadPendingBookingsSuccess = createAction(
+  '[Booking] Load Pending Bookings Success',
+  props<{ pendingBookings: Booking[] }>()
+);
+
+export const loadPendingBookingsFailure = createAction(
+  '[Booking] Load Pending Bookings Failure',
+  props<{ error: any }>()
+);
+
+// --- Confirm Booking Payment ---
+export const confirmBookingPayment = createAction(
+  '[Booking] Confirm Booking Payment',
+  props<{ bookingId: number }>()
+);
+
+export const confirmBookingPaymentSuccess = createAction(
+  '[Booking] Confirm Booking Payment Success',
+  props<{ bookingId: number }>()
+);
+
+export const confirmBookingPaymentFailure = createAction(
+  '[Booking] Confirm Booking Payment Failure',
+  props<{ error: any }>()
+);
 
 
 export const loadUserRecentBookings = createAction(

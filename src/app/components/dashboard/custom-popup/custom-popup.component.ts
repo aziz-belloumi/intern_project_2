@@ -58,7 +58,6 @@ export class CustomPopupComponent {
     }
 
     const booking: Booking = {
-      id: 0,
       userId: 1, // Replace with actual logged-in user id
       roomId: this.roomId,
       purpose: this.purpose,

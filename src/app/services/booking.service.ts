@@ -15,6 +15,15 @@ export class BookingService {
     return this.http.post<boolean>(`${this.apiUrl}/create-booking`, booking);
   }
 
+  getPendingBookings(userId: number): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.apiUrl}/get-pending-bookings?userId=${userId}`);
+  }
+
+  confirmBookingPayment(bookingId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/confirm-booking/${bookingId}`, {});
+  }
+
+
   getUserBookings(userId: number, lastBookingId: number = 0): Observable<Booking[]> {
     return this.http.get<Booking[]>(`${this.apiUrl}/get-all-bookings-of-user-by-chunks?userId=${userId}&lastBookingId=${lastBookingId}`);
   }

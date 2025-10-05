@@ -4,11 +4,11 @@ import {ResourceOverviewCardsComponent} from "./resource-overview-cards/resource
 import {RecommendationsComponent} from "./recommendations/recommendations.component";
 import {ResourceTableComponent} from "./resource-table/resource-table.component";
 import * as RoomActions from "../../state/room/room.actions";
+import * as BookingActions from "../../state/booking/booking.actions";
 import {Store} from "@ngrx/store";
-import {SocketService} from "../../services/socket.service";
 import * as RoomAvailabilityActions from "../../state/room-availability/room-availability.actions";
-import {Subscription} from "rxjs";
-import {loadRooms} from "../../state/room/room.actions";
+import * as AuthSelectors from "../../state/auth/auth.selectors";
+import {PendingBookingsComponent} from "./pending-bookings/pending-bookings.component";
 
 
 
@@ -20,44 +20,31 @@ import {loadRooms} from "../../state/room/room.actions";
     ResourceOverviewCardsComponent,
     RecommendationsComponent,
     ResourceTableComponent,
+    PendingBookingsComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardPageComponent implements OnInit{
+export class DashboardPageComponent implements OnInit {
+  currentUserId!: number;
 
-  private socketSub?: Subscription;
-
-  constructor(private store: Store , private socketService: SocketService) { }
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.socketService.connect();
+    this.store.select(AuthSelectors.selectUser).subscribe(user => {
+      if (user) {
+        this.currentUserId = user.id;
 
-    // the selectors inside the child components will fetch automatically the data in case of state chnages
-    // this part is the responsible for listening to the rooms changes
-    if (!this.socketSub) {
-      this.socketSub = this.socketService.messages$.subscribe((msg) => {
-        switch (msg.action) {
-          case 'roomCreated':
-          case 'roomUpdated':
-          case 'roomDeleted':
-            this.store.dispatch(loadRooms());
-            this.store.dispatch(RoomAvailabilityActions.loadRoomAvailability({
-              startTime: new Date().toISOString(),
-              endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-            }));
-            console.log("**************************** roooooommmm  creaaaaated !!!!!!");
-            break;
-          // add other events like bookingCreated, equipmentAdded...
-        }
-      });
-    }
-
-    this.store.dispatch(RoomActions.loadRooms());
-    this.store.dispatch(RoomAvailabilityActions.loadRoomAvailability({
-      startTime: new Date().toISOString(),
-      endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-    }));
+        // ✅ Dispatch actions only after user is available
+        this.store.dispatch(RoomActions.loadRooms());
+        this.store.dispatch(RoomAvailabilityActions.loadRoomAvailability({
+          startTime: new Date().toISOString(),
+          endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        }));
+        this.store.dispatch(RoomActions.loadUserRooms({ userId: this.currentUserId }));
+        this.store.dispatch(BookingActions.loadPendingBookings({ userId: this.currentUserId }));
+      }
+    });
   }
 }
 

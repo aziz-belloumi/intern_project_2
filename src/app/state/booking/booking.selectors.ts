@@ -19,6 +19,11 @@ export const selectBookingStatistics = createSelector(
   (state) => state.statistics
 );
 
+export const selectPendingBookings = createSelector(
+  selectBookingState,
+  (state) => state.pendingBookings
+);
+
 export const selectBookingLoading = createSelector(
   selectBookingState,
   (state) => state.loading
