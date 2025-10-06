@@ -115,8 +115,10 @@ namespace BookingSystem.Services.Services.Implementations
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error creating booking: {ex.Message}");
+                Console.WriteLine($"Inner exception: {ex.InnerException?.Message}");
                 return false;
             }
         }
@@ -142,7 +144,7 @@ namespace BookingSystem.Services.Services.Implementations
 
                 return true;
             }
-            catch
+            catch(Exception)
             {
                 return false;
             }
@@ -339,6 +341,7 @@ namespace BookingSystem.Services.Services.Implementations
                     {
                         RoomId = room.Id,
                         PricePerMinute = room.PricePerMinute,
+                        Capacity = room.Capacity,
                         Status = "Available",
                         Message = "This room is available for you"
                     });
@@ -354,6 +357,7 @@ namespace BookingSystem.Services.Services.Implementations
                     {
                         RoomId = room.Id,
                         PricePerMinute = room.PricePerMinute,
+                        Capacity = room.Capacity,
                         Status = "Not Available",
                         Message = $"Reserved from {confirmedBooking.StartTime:G} to {confirmedBooking.EndTime:G}"
                     });
@@ -365,6 +369,7 @@ namespace BookingSystem.Services.Services.Implementations
                     {
                         RoomId = room.Id,
                         PricePerMinute = room.PricePerMinute,
+                        Capacity = room.Capacity,
                         Status = "Pending",
                         Message = $"Still waiting for confirmation, it will be booked from {pendingBooking.StartTime:G} to {pendingBooking.EndTime:G}"
                     });
@@ -375,6 +380,7 @@ namespace BookingSystem.Services.Services.Implementations
                     {
                         RoomId = room.Id,
                         PricePerMinute = room.PricePerMinute,
+                        Capacity = room.Capacity,
                         Status = "Available",
                         Message = "This room is available for you"
                     });
