@@ -60,6 +60,9 @@
 
   <!-- Reservation Popup -->
   <app-custom-popup
+    [roomId]="selectedRoom?.roomId || 0"
+    [roomCapacity]="selectedRoom?.capacity || 0"
+    [pricePerMinute]="selectedRoom?.pricePerMinute || 0"
     [isVisible]="isPopupVisible"
     closeButtonText="X"
     (closed)="closePopup()"

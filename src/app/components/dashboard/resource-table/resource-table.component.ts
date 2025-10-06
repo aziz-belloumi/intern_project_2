@@ -6,12 +6,6 @@ import { Store } from '@ngrx/store';
 import { CustomPopupComponent } from "../custom-popup/custom-popup.component";
 import {FormsModule} from "@angular/forms";
 
-interface Room {
-  roomId: number;
-  pricePerMinute: number;
-  status: string;
-  message: string;
-}
 
 @Component({
   selector: 'app-resource-table',
@@ -24,7 +18,7 @@ export class ResourceTableComponent {
   rooms$ = this.store.select(RoomAvailabilitySelectors.selectAllRooms);
 
   isPopupVisible = false;
-  selectedRoom: Room | null = null;
+  selectedRoom: any = null;
 
   startTime?: string;
   endTime?: string;
@@ -43,7 +37,7 @@ export class ResourceTableComponent {
     return status;
   }
 
-  reserveRoom(room: Room) {
+  reserveRoom(room: any) {
     if (room.status.toLowerCase() === 'available') {
       this.selectedRoom = room;
       this.isPopupVisible = true;

@@ -37,4 +37,11 @@ export class WebSocketListenerService {
       }
     });
   }
+
+  disconnect(): void {
+    if (this.socketService) {
+      this.socketService.close();
+      console.log('WebSocket disconnected');
+    }
+  }
 }

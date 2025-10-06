@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import {Booking, BookingStatus} from "../../../models/booking.model";
+import {Booking} from "../../../models/booking.model";
 import {BookingService} from "../../../services/booking.service";
 
 @Component({
@@ -21,17 +21,17 @@ import {BookingService} from "../../../services/booking.service";
   ]
 })
 export class CustomPopupComponent {
-  @Input() roomId!: number;
-  @Input() roomCapacity!: number;
-  @Input() pricePerMinute!: number;
+  @Input() roomId: number = 0;
+  @Input() roomCapacity: number = 0;
+  @Input() pricePerMinute: number = 0;
   @Input() isVisible: boolean = false;
   @Input() closeButtonText: string = 'Close';
 
   @Output() closed = new EventEmitter<void>();
   @Output() bookingConfirmed = new EventEmitter<Booking>();
 
-  startTime!: string;
-  endTime!: string;
+  startTime: string = '';
+  endTime: string = '';
   attendees: number = 1;
   purpose: string = '';
 
@@ -57,8 +57,10 @@ export class CustomPopupComponent {
       return;
     }
 
+    const capacityUtil = this.roomCapacity > 0 ? this.attendees / this.roomCapacity : 0;
+
     const booking: Booking = {
-      userId: 1, // Replace with actual logged-in user id
+      userId: 1,
       roomId: this.roomId,
       purpose: this.purpose,
       startTime: start.toISOString(),
@@ -71,13 +73,10 @@ export class CustomPopupComponent {
       hourOfDay: start.getHours(),
       month: start.getMonth() + 1,
       isWeekend: start.getDay() === 0 || start.getDay() === 6,
-      capacityUtilization: this.attendees / this.roomCapacity,
-      isPeakHour: start.getHours() >= 9 && start.getHours() <= 18,
+      capacityUtilization: capacityUtil,  // Use the safe calculated value
+      isPeakHour: start.getHours() >= 9 && start.getHours() <= 17,
       season: this.getSeason(start.getMonth() + 1),
-      totalPrice: duration * this.pricePerMinute,
-      status: BookingStatus.Pending,
-      createdAt: new Date().toISOString(),
-      updatedAt: undefined
+      totalPrice: duration * this.pricePerMinute
     };
 
     this.bookingService.createBooking(booking).subscribe({
@@ -86,7 +85,12 @@ export class CustomPopupComponent {
         this.bookingConfirmed.emit(booking);
         this.close();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error('Full error:', err);
+        console.error('Error details:', err.error);
+        console.error('Validation errors:', err.error?.errors);
+        alert('Booking failed: ' + JSON.stringify(err.error?.errors || err.message));
+      }
     });
   }
 

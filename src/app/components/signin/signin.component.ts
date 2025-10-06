@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {filter, Subject, take, takeUntil} from "rxjs";
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {signin} from "../../state/auth/auth.actions";
+import {WebSocketListenerService} from "../../services/websocket-listener.service";
 
 @Component({
   selector: 'app-signin',
@@ -16,7 +17,7 @@ import {signin} from "../../state/auth/auth.actions";
   styleUrls: ['./signin.component.css']
 })
 export class SigninPageComponent implements OnInit,OnDestroy {
-  constructor(private fb: FormBuilder , private store: Store , private router: Router , private snackBar: MatSnackBar) { }
+  constructor(private wsListener: WebSocketListenerService ,private fb: FormBuilder , private store: Store , private router: Router , private snackBar: MatSnackBar) { }
    form = this.fb.group({
      email: ['', [Validators.required, Validators.email]],
      password: ['', [Validators.required]]
@@ -47,6 +48,7 @@ export class SigninPageComponent implements OnInit,OnDestroy {
      const email: string = this.form.value.email!;
      const password: string = this.form.value.password!;
      this.store.dispatch(signin({email, password }));
+     this.wsListener.initWebSocket();
      this.store.select(selectUser).pipe(
        filter(user => !!user), // wait until user becomes non-null
        take(1) // only take the first valid user

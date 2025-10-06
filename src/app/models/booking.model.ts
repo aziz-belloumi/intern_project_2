@@ -17,8 +17,8 @@ export interface Booking {
   isPeakHour: boolean;
   season: number;
   totalPrice: number;
-  status: number;
-  createdAt: string;
+  status?: number;
+  createdAt?: string;
   updatedAt?: string;
 }
 

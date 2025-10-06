@@ -17,22 +17,22 @@
 
           <div class="detail-row">
             <span class="detail-label">Purpose:</span>
-            <input type="text" [(ngModel)]="purpose" class="popup-input" placeholder="Enter purpose" />
+            <input type="text" [(ngModel)]="purpose" class="popup-input" placeholder="Enter purpose" required />
           </div>
 
           <div class="detail-row">
             <span class="detail-label">Attendees:</span>
-            <input type="number" [(ngModel)]="attendees" class="popup-input" min="1" [max]="roomCapacity" />
+            <input type="number" [(ngModel)]="attendees" class="popup-input" min="1" [max]="roomCapacity" required/>
           </div>
 
           <div class="detail-row">
             <span class="detail-label">Start Time:</span>
-            <input type="datetime-local" [(ngModel)]="startTime" class="popup-input" />
+            <input type="datetime-local" [(ngModel)]="startTime" class="popup-input" required/>
           </div>
 
           <div class="detail-row">
             <span class="detail-label">End Time:</span>
-            <input type="datetime-local" [(ngModel)]="endTime" class="popup-input" />
+            <input type="datetime-local" [(ngModel)]="endTime" class="popup-input" required/>
           </div>
 
           <div class="popup-actions">

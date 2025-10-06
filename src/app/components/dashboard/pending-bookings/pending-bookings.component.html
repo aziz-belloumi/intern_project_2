@@ -28,12 +28,8 @@
         </p>
 
         <div class="room-actions">
-          <button class="btn btn-primary" (click)="approveBooking(booking.id!)">
-            Approve
-          </button>
-          <button class="btn btn-secondary" (click)="rejectBooking(booking.id!)">
-            Reject
-          </button>
+          <button *ngIf="booking.id !== undefined" (click)="approveBooking(booking.id)">Approve</button>
+          <button *ngIf="booking.id !== undefined" (click)="rejectBooking(booking.id)">Reject</button>
         </div>
       </div>
     </div>

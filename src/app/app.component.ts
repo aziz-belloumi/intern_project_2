@@ -1,6 +1,5 @@
-import { Component,OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {WebSocketListenerService} from "./services/websocket-listener.service";
 
 @Component({
   selector: 'app-root',
@@ -9,11 +8,6 @@ import {WebSocketListenerService} from "./services/websocket-listener.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  constructor(private wsListener: WebSocketListenerService) {}
-
-  ngOnInit(): void {
-    this.wsListener.initWebSocket(); // Starts the central listener
-  }
+export class AppComponent {
   title = 'BookingSystemWeb';
 }
