@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as BookingSelectors from '../../../state/booking/booking.selectors';
-import { Observable } from 'rxjs';
-import { Booking } from '../../../models/booking.model';
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {BookingService} from "../../../services/booking.service";
 
 @Component({
   selector: 'app-pending-bookings',
@@ -12,33 +11,24 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
   imports: [
     DatePipe,
     NgIf,
-    NgForOf
+    NgForOf,
+    AsyncPipe
   ],
   styleUrls: ['./pending-bookings.component.css']
 })
-export class PendingBookingsComponent implements OnInit {
+export class PendingBookingsComponent  {
+  pendingBookings$ = this.store.select(BookingSelectors.selectPendingBookings);
 
-  pendingBookings: Booking[] = [];
-
-  constructor(private store: Store) {}
-
-  ngOnInit(): void {
-    this.store.select(BookingSelectors.selectPendingBookings).subscribe(pendings => {
-      this.pendingBookings = pendings;
-    });
-
-
-
-    console.log('**************************************************',this.pendingBookings);
-  }
+  constructor(private store: Store, private bookingService: BookingService) {}
 
   approveBooking(id: number) {
-    console.log('Approved booking:', id);
-    // dispatch action or call service to approve booking
-  }
-
-  rejectBooking(id: number) {
-    console.log('Rejected booking:', id);
-    // dispatch action or call service to reject booking
+    this.bookingService.confirmBookingPayment(id).subscribe({
+      next: (res) => {
+        console.log(`Booking ${id} confirmed successfully`, res);
+      },
+      error: (err) => {
+        console.error(`Failed to confirm booking ${id}`, err);
+      }
+    });
   }
 }

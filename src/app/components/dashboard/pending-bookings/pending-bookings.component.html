@@ -4,7 +4,7 @@
   </div>
 
   <!-- No Bookings Message -->
-  <div *ngIf="pendingBookings.length === 0" class="no-results">
+  <div *ngIf="!(pendingBookings$ | async)?.length" class="no-results">
     <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
     </svg>
@@ -13,25 +13,48 @@
   </div>
 
   <!-- Bookings List -->
-  <div class="rooms-container list-view" *ngIf="pendingBookings.length > 0">
-    <div *ngFor="let booking of pendingBookings" class="room-card">
-      <div class="room-content">
-        <div class="room-header">
-          <h3 class="room-title">Booking #{{ booking?.id }}</h3>
-          <div class="room-price">{{ booking.createdAt | date:'short' }}</div>
-        </div>
+  <ng-container *ngIf="pendingBookings$ | async as pendingBookings">
+    <div class="rooms-container list-view" *ngIf="pendingBookings.length > 0">
+      <div *ngFor="let booking of pendingBookings" class="room-card">
+        <div class="room-content">
+          <div class="room-header">
+            <h3 class="room-title">Booking #{{ booking?.id }}</h3>
+            <div class="room-price">{{ booking.createdAt | date:'short' }}</div>
+          </div>
 
-        <p class="room-description">
-          Room: {{ booking.roomId }}<br>
-          User: {{ booking.attendees}}<br>
-          Duration: {{ booking.attendees }} minutes
-        </p>
+          <div class="booking-details">
+            <div class="detail-row">
+              <span class="detail-label">Room ID:</span>
+              <span class="detail-value">{{ booking.roomId }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Attendees:</span>
+              <span class="detail-value">{{ booking.attendees }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Duration:</span>
+              <span class="detail-value">{{ booking.durationMinutes }} minutes</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Time Slot:</span>
+              <span class="detail-value">{{ booking.startTime | date:'short' }} - {{ booking.endTime | date:'short' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Total Price:</span>
+              <span class="detail-value price-highlight">${{ booking.totalPrice }}</span>
+            </div>
+          </div>
 
-        <div class="room-actions">
-          <button *ngIf="booking.id !== undefined" (click)="approveBooking(booking.id)">Approve</button>
-          <button *ngIf="booking.id !== undefined" (click)="rejectBooking(booking.id)">Reject</button>
+          <div class="room-actions">
+            <button *ngIf="booking.id !== undefined" class="btn btn-primary" (click)="approveBooking(booking.id)">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+              </svg>
+              Approve Payment
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
