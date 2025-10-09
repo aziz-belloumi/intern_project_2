@@ -99,7 +99,7 @@ namespace BookingSystem.Services.Services.Implementations
                 // ✅ Launch timer in background
                 _ = Task.Run(async () =>
                 {
-                    await Task.Delay(TimeSpan.FromMinutes(4));
+                    await Task.Delay(TimeSpan.FromMinutes(1));
 
                     using (var scope = _scopeFactory.CreateScope())
                     {
@@ -323,7 +323,8 @@ namespace BookingSystem.Services.Services.Implementations
         }
         public async Task<object> CheckAllRoomsAvailabilityAsync(DateTime? startTime = null, DateTime? endTime = null)
         {
-            var now = DateTime.Now;
+            // ✅ Use UTC consistently
+            var now = DateTime.UtcNow;
 
             var actualStartTime = startTime ?? now;
             var actualEndTime = endTime ?? actualStartTime.AddHours(24);
@@ -335,8 +336,11 @@ namespace BookingSystem.Services.Services.Implementations
 
             var rooms = await _context.Rooms.ToListAsync();
 
+            // ✅ Only get bookings that actually overlap AND aren't cancelled/completed
             var overlappingBookings = await _context.Bookings
-                .Where(b => actualStartTime < b.EndTime && actualEndTime > b.StartTime)
+                .Where(b => actualStartTime < b.EndTime
+                         && actualEndTime > b.StartTime
+                         && (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Confirmed))
                 .ToListAsync();
 
             var bookingsByRoom = overlappingBookings
@@ -375,9 +379,11 @@ namespace BookingSystem.Services.Services.Implementations
                     continue;
                 }
 
-                // ✅ Then check pending bookings that are still within the 2-minute window
+                // ✅ Check pending bookings within 4-minute window (matches auto-cancel logic)
                 var pendingBooking = roomBookings
-                    .Where(b => b.Status == BookingStatus.Pending && (now - b.CreatedAt).TotalMinutes < 2)
+                    .Where(b => b.Status == BookingStatus.Pending
+                             && (now - b.CreatedAt).TotalMinutes < 4)
+                    .OrderByDescending(b => b.CreatedAt)
                     .FirstOrDefault();
 
                 if (pendingBooking != null)
