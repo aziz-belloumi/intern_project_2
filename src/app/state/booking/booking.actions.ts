@@ -32,6 +32,22 @@ export const loadPendingBookingsFailure = createAction(
   props<{ error: any }>()
 );
 
+// --- Create Booking ---
+export const createBooking = createAction(
+  '[Booking] Create Booking',
+  props<{ booking: Booking }>()
+);
+
+export const createBookingSuccess = createAction(
+  '[Booking] Create Booking Success',
+  props<{ booking: boolean }>()
+);
+
+export const createBookingFailure = createAction(
+  '[Booking] Create Booking Failure',
+  props<{ error: any }>()
+);
+
 // --- Confirm Booking Payment ---
 export const confirmBookingPayment = createAction(
   '[Booking] Confirm Booking Payment',

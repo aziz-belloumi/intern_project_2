@@ -18,6 +18,10 @@ export const bookingReducer = createReducer(
   on(BookingActions.loadUserStatisticsSuccess, (state, { statistics }) => ({ ...state, statistics, loading: false })),
   on(BookingActions.loadUserStatisticsFailure, (state, { error }) => ({ ...state, error, loading: false })),
 
+  on(BookingActions.createBooking, state => ({...state, loading: true})),
+  on(BookingActions.createBookingSuccess, (state) => ({...state, loading: false, error: null})),
+  on(BookingActions.createBookingFailure, (state, { error }) => ({...state, loading: false, error})),
+
   on(BookingActions.loadPendingBookings, state => ({ ...state, loading: true })),
   on(BookingActions.loadPendingBookingsSuccess, (state, { pendingBookings }) => ({...state, pendingBookings, loading: false})),
   on(BookingActions.loadPendingBookingsFailure, (state, { error }) => ({ ...state, error, loading: false })),

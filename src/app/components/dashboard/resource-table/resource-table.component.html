@@ -42,16 +42,17 @@
           <span class="message-text">{{ room.message }}</span>
           <button
             class="reserve-btn"
-            [disabled]="room.status.toLowerCase() !== 'available'"
+            [disabled]="room.status?.trim().toLowerCase() !== 'available'"
             [ngStyle]="{
-                'background-color': room.status.toLowerCase() === 'available' ? '#0056b3' : '#888',
-                color: '#fff',
-                cursor: room.status.toLowerCase() === 'available' ? 'pointer' : 'not-allowed'
-              }"
+      'background-color': room.status?.trim().toLowerCase() === 'available' ? '#0056b3' : '#888',
+      color: '#fff',
+      cursor: room.status?.trim().toLowerCase() === 'available' ? 'pointer' : 'not-allowed'
+    }"
             (click)="reserveRoom(room)"
           >
             Reserve
           </button>
+
         </td>
       </tr>
       </tbody>

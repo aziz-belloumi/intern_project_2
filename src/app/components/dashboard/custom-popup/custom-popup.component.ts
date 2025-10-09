@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import {Booking} from "../../../models/booking.model";
-import {BookingService} from "../../../services/booking.service";
+import * as BookingActions from '../../../state/booking/booking.actions';
+import {Store} from "@ngrx/store";
 
 @Component({
   selector: 'app-custom-popup',
@@ -35,7 +36,7 @@ export class CustomPopupComponent {
   attendees: number = 1;
   purpose: string = '';
 
-  constructor(private bookingService: BookingService) {}
+  constructor(private store: Store) {}
 
   close() {
     this.isVisible = false;
@@ -79,19 +80,7 @@ export class CustomPopupComponent {
       totalPrice: duration * this.pricePerMinute
     };
 
-    this.bookingService.createBooking(booking).subscribe({
-      next: () => {
-        alert('Booking created in Pending state!');
-        this.bookingConfirmed.emit(booking);
-        this.close();
-      },
-      error: (err) => {
-        console.error('Full error:', err);
-        console.error('Error details:', err.error);
-        console.error('Validation errors:', err.error?.errors);
-        alert('Booking failed: ' + JSON.stringify(err.error?.errors || err.message));
-      }
-    });
+    this.store.dispatch(BookingActions.createBooking({ booking }));
   }
 
   private getSeason(month: number): number {

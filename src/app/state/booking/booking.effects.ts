@@ -44,6 +44,24 @@ export class BookingEffects {
     )
   );
 
+  createBooking$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BookingActions.createBooking),
+      mergeMap(action =>
+        this.bookingService.createBooking(action.booking).pipe(
+          map(result =>
+            BookingActions.createBookingSuccess({ booking: result }) // boolean returned
+          ),
+          catchError(error =>
+            of(BookingActions.createBookingFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+
+
   loadPendingBookings$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BookingActions.loadPendingBookings),

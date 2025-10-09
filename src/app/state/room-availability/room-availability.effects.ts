@@ -13,7 +13,10 @@ export class RoomAvailabilityEffects {
       mergeMap(action =>
         this.bookingService.getAllRoomsAvailability(action.startTime,action.endTime).pipe(
           map(response => RoomAvailabilityActions.loadRoomAvailabilitySuccess({ rooms: response.rooms })),
-          catchError(error => of(RoomAvailabilityActions.loadRoomAvailabilityFailure({ error })))
+          catchError(error => {
+            console.error("❌ Backend error:", error);
+            return of(RoomAvailabilityActions.loadRoomAvailabilityFailure({ error }));
+          })
         )
       )
     )
