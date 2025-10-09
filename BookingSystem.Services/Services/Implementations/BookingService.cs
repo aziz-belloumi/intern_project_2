@@ -3,6 +3,7 @@ using BookingSystem.Data.Models;
 using BookingSystem.Services.Helpers;
 using BookingSystem.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
 
@@ -12,11 +13,13 @@ namespace BookingSystem.Services.Services.Implementations
     {
         private readonly ApplicationDbContext _context;
         private readonly RoomWebSocketHandler _wsHandler;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public BookingService(ApplicationDbContext context, RoomWebSocketHandler wsHandler)
+        public BookingService(ApplicationDbContext context, RoomWebSocketHandler wsHandler, IServiceScopeFactory scopeFactory)
         {
             _context = context;
             _wsHandler = wsHandler;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task<List<Object>?> GetUserBookingsChunkAsync(int userId, int? lastBookingId, int chunkSize = 10)
@@ -85,7 +88,7 @@ namespace BookingSystem.Services.Services.Implementations
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
 
-                // Broadcast to frontend
+                // Broadcast booking creation
                 await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
                 {
                     action = "bookingCreated",
@@ -93,23 +96,29 @@ namespace BookingSystem.Services.Services.Implementations
                     status = booking.Status
                 }));
 
-                // Start 2-minute pending timer (fire-and-forget)
+                // ✅ Launch timer in background
                 _ = Task.Run(async () =>
                 {
-                    await Task.Delay(TimeSpan.FromMinutes(2));
-                    var pendingBooking = await _context.Bookings.FindAsync(booking.Id);
-                    if (pendingBooking != null && pendingBooking.Status == BookingStatus.Pending)
-                    {
-                        pendingBooking.Status = BookingStatus.Cancelled;
-                        pendingBooking.UpdatedAt = DateTime.UtcNow;
-                        await _context.SaveChangesAsync();
+                    await Task.Delay(TimeSpan.FromMinutes(4));
 
-                        await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
+                    using (var scope = _scopeFactory.CreateScope())
+                    {
+                        var scopedContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                        var pendingBooking = await scopedContext.Bookings.FindAsync(booking.Id);
+                        if (pendingBooking != null && pendingBooking.Status == BookingStatus.Pending)
                         {
-                            action = "bookingCancelled",
-                            bookingId = pendingBooking.Id,
-                            status = pendingBooking.Status
-                        }));
+                            pendingBooking.Status = BookingStatus.Cancelled;
+                            pendingBooking.UpdatedAt = DateTime.UtcNow;
+                            await scopedContext.SaveChangesAsync();
+
+                            await _wsHandler.BroadcastAsync(JsonSerializer.Serialize(new
+                            {
+                                action = "bookingCancelled",
+                                bookingId = pendingBooking.Id,
+                                status = pendingBooking.Status
+                            }));
+                        }
                     }
                 });
 
@@ -117,11 +126,12 @@ namespace BookingSystem.Services.Services.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating booking: {ex.Message}");
+                Console.WriteLine($"❌ Error creating booking: {ex.Message}");
                 Console.WriteLine($"Inner exception: {ex.InnerException?.Message}");
                 return false;
             }
         }
+
 
         public async Task<bool> ConfirmBookingPaymentAsync(int bookingId)
         {
@@ -144,7 +154,7 @@ namespace BookingSystem.Services.Services.Implementations
 
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -226,7 +236,7 @@ namespace BookingSystem.Services.Services.Implementations
                     avgCapacityUtilization = (decimal)completedBookings.Average(b => b.CapacityUtilization);
                 }
 
-                return new List<decimal>{totalBookings, completedReservations, mostUsedRoomId,totalSpent,avgCapacityUtilization};
+                return new List<decimal> { totalBookings, completedReservations, mostUsedRoomId, totalSpent, avgCapacityUtilization };
             }
             catch
             {
@@ -350,6 +360,7 @@ namespace BookingSystem.Services.Services.Implementations
 
                 var roomBookings = bookingsByRoom[room.Id];
 
+                // ✅ Check confirmed bookings first
                 var confirmedBooking = roomBookings.FirstOrDefault(b => b.Status == BookingStatus.Confirmed);
                 if (confirmedBooking != null)
                 {
@@ -361,10 +372,16 @@ namespace BookingSystem.Services.Services.Implementations
                         Status = "Not Available",
                         Message = $"Reserved from {confirmedBooking.StartTime:G} to {confirmedBooking.EndTime:G}"
                     });
+                    continue;
                 }
-                else if (roomBookings.Any(b => b.Status == BookingStatus.Pending))
+
+                // ✅ Then check pending bookings that are still within the 2-minute window
+                var pendingBooking = roomBookings
+                    .Where(b => b.Status == BookingStatus.Pending && (now - b.CreatedAt).TotalMinutes < 2)
+                    .FirstOrDefault();
+
+                if (pendingBooking != null)
                 {
-                    var pendingBooking = roomBookings.First(b => b.Status == BookingStatus.Pending);
                     result.Add(new
                     {
                         RoomId = room.Id,
@@ -373,26 +390,23 @@ namespace BookingSystem.Services.Services.Implementations
                         Status = "Pending",
                         Message = $"Still waiting for confirmation, it will be booked from {pendingBooking.StartTime:G} to {pendingBooking.EndTime:G}"
                     });
+                    continue;
                 }
-                else
+
+                // ✅ Otherwise, room is available
+                result.Add(new
                 {
-                    result.Add(new
-                    {
-                        RoomId = room.Id,
-                        PricePerMinute = room.PricePerMinute,
-                        Capacity = room.Capacity,
-                        Status = "Available",
-                        Message = "This room is available for you"
-                    });
-                }
+                    RoomId = room.Id,
+                    PricePerMinute = room.PricePerMinute,
+                    Capacity = room.Capacity,
+                    Status = "Available",
+                    Message = "This room is available for you"
+                });
             }
 
             return new { Rooms = result };
         }
 
 
-
-
     }
-
 }

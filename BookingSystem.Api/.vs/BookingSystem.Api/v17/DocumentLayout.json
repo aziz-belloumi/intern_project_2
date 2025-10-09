@@ -3,23 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{712D9E69-5CDC-4749-8AF1-F6D2D12C7037}|..\\BookingSystem.Data\\BookingSystem.Data.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.data\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{712D9E69-5CDC-4749-8AF1-F6D2D12C7037}|..\\BookingSystem.Data\\BookingSystem.Data.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.data\\models\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C57FA091-12AE-439A-8550-C89EAFE43FE0}|..\\BookingSystem.Services\\BookingSystem.Services.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.services\\services\\interfaces\\ibookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{10BA4B25-28AE-4CAE-91CA-6B606FE5C7D8}|BookingSystem.Api.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.api\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{10BA4B25-28AE-4CAE-91CA-6B606FE5C7D8}|BookingSystem.Api.csproj|solutionrelative:controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C57FA091-12AE-439A-8550-C89EAFE43FE0}|..\\BookingSystem.Services\\BookingSystem.Services.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.services\\services\\implementations\\bookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{712D9E69-5CDC-4749-8AF1-F6D2D12C7037}|..\\BookingSystem.Data\\BookingSystem.Data.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.data\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C57FA091-12AE-439A-8550-C89EAFE43FE0}|..\\BookingSystem.Services\\BookingSystem.Services.csproj|c:\\users\\bello\\desktop\\back-end\\bookingsystem.services\\services\\interfaces\\ibookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -33,59 +20,20 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Equipment.cs",
-              "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Equipment.cs",
-              "RelativeDocumentMoniker": "..\\BookingSystem.Data\\Models\\Equipment.cs",
-              "ToolTip": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Equipment.cs",
-              "RelativeToolTip": "..\\BookingSystem.Data\\Models\\Equipment.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-06T11:21:09.794Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Room.cs",
-              "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Room.cs",
-              "RelativeDocumentMoniker": "..\\BookingSystem.Data\\Models\\Room.cs",
-              "ToolTip": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Room.cs",
-              "RelativeToolTip": "..\\BookingSystem.Data\\Models\\Room.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-06T11:18:24.584Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "BookingController.cs",
-              "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Api\\Controllers\\BookingController.cs",
-              "RelativeDocumentMoniker": "Controllers\\BookingController.cs",
-              "ToolTip": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Api\\Controllers\\BookingController.cs",
-              "RelativeToolTip": "Controllers\\BookingController.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAcwDIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-05T14:48:55.687Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "BookingService.cs",
               "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Services\\Services\\Implementations\\BookingService.cs",
               "RelativeDocumentMoniker": "..\\BookingSystem.Services\\Services\\Implementations\\BookingService.cs",
               "ToolTip": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Services\\Services\\Implementations\\BookingService.cs",
               "RelativeToolTip": "..\\BookingSystem.Services\\Services\\Implementations\\BookingService.cs",
-              "ViewState": "AgIAAC4BAAAAAAAAAAAAwH4BAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAAAJYBAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-05T14:48:30.08Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "IBookingService.cs",
               "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Services\\Services\\Interfaces\\IBookingService.cs",
               "RelativeDocumentMoniker": "..\\BookingSystem.Services\\Services\\Interfaces\\IBookingService.cs",
@@ -94,25 +42,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-05T14:48:47.158Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Booking.cs",
-              "DocumentMoniker": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Booking.cs",
-              "RelativeDocumentMoniker": "..\\BookingSystem.Data\\Models\\Booking.cs",
-              "ToolTip": "C:\\Users\\bello\\Desktop\\back-end\\BookingSystem.Data\\Models\\Booking.cs",
-              "RelativeToolTip": "..\\BookingSystem.Data\\Models\\Booking.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAowCwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-05T14:48:35.347Z",
               "EditorCaption": ""
             }
           ]
