@@ -86,3 +86,30 @@ export const deleteRoomFailure = createAction(
   '[Room] Delete Room Failure',
   props<{ error: any }>()
 );
+
+// Add these at the end of your existing actions file
+
+// search rooms
+export const searchRooms = createAction(
+  '[Room] Search Rooms',
+  props<{ params: {
+      searchTerm?: string;
+      minCapacity?: number;
+      maxCapacity?: number;
+      roomType?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      hasProjector?: boolean;
+      hasWhiteboard?: boolean;
+    } }>()
+);
+
+export const searchRoomsSuccess = createAction(
+  '[Room] Search Rooms Success',
+  props<{ rooms: Room[] }>()
+);
+
+export const searchRoomsFailure = createAction(
+  '[Room] Search Rooms Failure',
+  props<{ error: any }>()
+);

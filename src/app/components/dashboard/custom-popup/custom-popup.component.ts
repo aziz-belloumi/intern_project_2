@@ -1,10 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import {Booking} from "../../../models/booking.model";
+import { Booking } from "../../../models/booking.model";
 import * as BookingActions from '../../../state/booking/booking.actions';
-import {Store} from "@ngrx/store";
+import * as BookingSelectors from '../../../state/booking/booking.selectors';
+import { Store } from "@ngrx/store";
+import { Subject, takeUntil, filter } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-custom-popup',
@@ -21,7 +24,7 @@ import {Store} from "@ngrx/store";
     ])
   ]
 })
-export class CustomPopupComponent {
+export class CustomPopupComponent implements OnInit, OnDestroy {
   @Input() roomId: number = 0;
   @Input() roomCapacity: number = 0;
   @Input() pricePerMinute: number = 0;
@@ -36,7 +39,36 @@ export class CustomPopupComponent {
   attendees: number = 1;
   purpose: string = '';
 
-  constructor(private store: Store) {}
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private store: Store,
+    private actions$: Actions
+  ) {}
+
+  ngOnInit(): void {
+    // Listen for successful booking creation
+    this.actions$.pipe(
+      ofType(BookingActions.createBookingSuccess),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.bookingConfirmed.emit();
+      this.close();
+    });
+
+    // Listen for booking creation failure
+    this.actions$.pipe(
+      ofType(BookingActions.createBookingFailure),
+      takeUntil(this.destroy$)
+    ).subscribe(({ error }) => {
+      alert('Booking failed: ' + (error?.message || 'Unknown error'));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   close() {
     this.isVisible = false;
@@ -74,7 +106,7 @@ export class CustomPopupComponent {
       hourOfDay: start.getHours(),
       month: start.getMonth() + 1,
       isWeekend: start.getDay() === 0 || start.getDay() === 6,
-      capacityUtilization: capacityUtil,  // Use the safe calculated value
+      capacityUtilization: capacityUtil,
       isPeakHour: start.getHours() >= 9 && start.getHours() <= 17,
       season: this.getSeason(start.getMonth() + 1),
       totalPrice: duration * this.pricePerMinute

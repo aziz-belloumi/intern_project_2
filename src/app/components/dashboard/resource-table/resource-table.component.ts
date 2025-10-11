@@ -19,7 +19,6 @@ export class ResourceTableComponent {
 
   isPopupVisible = false;
   selectedRoom: any = null;
-
   startTime?: string;
   endTime?: string;
 
@@ -50,7 +49,7 @@ export class ResourceTableComponent {
   }
 
   onBookingConfirmed(event: { startTime: string; endTime: string }) {
-    console.log(`Room ${this.selectedRoom?.roomId} reserved:`, event);
+    //console.log(`Room ${this.selectedRoom?.roomId} reserved:`, event);
     // 🔗 Call backend service here with room + event.startTime + event.endTime
     this.closePopup();
   }

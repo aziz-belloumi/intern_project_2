@@ -27,3 +27,10 @@ export const selectRoomById = (id: number) => createSelector(
 );
 
 export const selectUserRooms = createSelector(selectRoomState, state => state.userRooms);
+
+// Add this new selector
+export const selectFilteredRooms = createSelector(
+  selectRoomState,
+  (state) => state.filteredRooms
+);
+

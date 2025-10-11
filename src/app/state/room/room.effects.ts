@@ -80,4 +80,16 @@ export class RoomEffects {
       )
     )
   );
+
+  searchRooms$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RoomActions.searchRooms),
+      mergeMap(({ params }) =>
+        this.roomService.searchRooms(params).pipe(
+          map(rooms => RoomActions.searchRoomsSuccess({ rooms })),
+          catchError(error => of(RoomActions.searchRoomsFailure({ error })))
+        )
+      )
+    )
+  );
 }

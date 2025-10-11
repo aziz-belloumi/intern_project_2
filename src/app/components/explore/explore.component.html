@@ -13,17 +13,17 @@
           <mat-icon class="search-icon">search</mat-icon>
           <input
             type="text"
-            placeholder="Search rooms by type, capacity, or features..."
+            placeholder="Search rooms by type or features inside the description"
             class="search-input"
             [(ngModel)]="searchTerm"
-            (input)="filterRooms()"
+            (input)="filterRooms(); goToPage(1)"
           />
         </div>
 
         <div class="filters-row">
           <div class="filter-group">
             <label class="filter-label">Capacity</label>
-            <select class="filter-select" [(ngModel)]="capacityFilter" (change)="filterRooms()">
+            <select class="filter-select" [(ngModel)]="capacityFilter" (change)="filterRooms(); goToPage(1)">
               <option value="">Any capacity</option>
               <option value="1-5">1-5 people</option>
               <option value="6-10">6-10 people</option>
@@ -34,7 +34,7 @@
 
           <div class="filter-group">
             <label class="filter-label">Room Type</label>
-            <select class="filter-select" [(ngModel)]="typeFilter" (change)="filterRooms()">
+            <select class="filter-select" [(ngModel)]="typeFilter" (change)="filterRooms(); goToPage(1)">
               <option value="">All types</option>
               <option value="meeting">Meeting Room</option>
               <option value="conference">Conference Room</option>
@@ -47,7 +47,7 @@
 
           <div class="filter-group">
             <label class="filter-label">Price Range</label>
-            <select class="filter-select" [(ngModel)]="priceFilter" (change)="filterRooms()">
+            <select class="filter-select" [(ngModel)]="priceFilter" (change)="filterRooms(); goToPage(1)">
               <option value="">Any price</option>
               <option value="0-0.5">$0.00 - $0.50/min</option>
               <option value="0.5-1">$0.50 - $1.00/min</option>
@@ -58,11 +58,11 @@
 
           <div class="equipment-filters">
             <label class="equipment-filter">
-              <input type="checkbox" [(ngModel)]="projectorFilter" (change)="filterRooms()" />
+              <input type="checkbox" [(ngModel)]="projectorFilter" (change)="filterRooms(); goToPage(1)" />
               <span class="equipment-label">Projector</span>
             </label>
             <label class="equipment-filter">
-              <input type="checkbox" [(ngModel)]="whiteboardFilter" (change)="filterRooms()" />
+              <input type="checkbox" [(ngModel)]="whiteboardFilter" (change)="filterRooms(); goToPage(1)" />
               <span class="equipment-label">Whiteboard</span>
             </label>
           </div>
@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <!-- Rooms Grid -->
+      <!-- Rooms Grid/List with Pagination -->
       <div class="rooms-container" [ngClass]="currentView + '-view'">
         <div *ngIf="filteredRooms.length === 0" class="no-results">
           <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,8 @@
           <p>Try adjusting your search criteria or filters</p>
         </div>
 
-        <div *ngFor="let room of filteredRooms" class="room-card">
+        <!-- Show only rooms for current page -->
+        <div *ngFor="let room of filteredRooms | slice:(currentPage-1)*roomsPerPage:currentPage*roomsPerPage" class="room-card">
           <div class="room-image">
             <div class="room-type-badge">{{ formatRoomType(room.roomType) }}</div>
             <div class="room-capacity-badge">
@@ -144,18 +145,18 @@
         </div>
       </div>
 
-      <!-- Pagination -->
+      <!-- Pagination Controls -->
       <div class="pagination">
-        <button class="pagination-btn" disabled>
+        <button class="pagination-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage-1)">
           <svg fill="currentColor" viewBox="0 0 24 24">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
           Previous
         </button>
         <div class="pagination-info">
-          <span>Page 1 of 3</span>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
         </div>
-        <button class="pagination-btn">
+        <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage+1)">
           Next
           <svg fill="currentColor" viewBox="0 0 24 24">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
@@ -167,8 +168,7 @@
   </main>
 </div>
 
-<!-- Add this at the end of your explore.component.html template -->
-
+<!-- Room Details Popup -->
 <app-custom-popup
   [roomType]="selectedRoom ? formatRoomType(selectedRoom.roomType) : ''"
   [capacity]="selectedRoom?.capacity || 0"

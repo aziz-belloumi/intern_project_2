@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatIconModule} from "@angular/material/icon";
-import {Room} from "../../models/room.model";
-import {FormsModule} from "@angular/forms";
+import { MatIconModule } from "@angular/material/icon";
+import { FormsModule } from "@angular/forms";
+import { Observable } from "rxjs";
+import { Store } from "@ngrx/store";
+
+import { Room } from "../../models/room.model";
 import { CustomPopupComponent } from "./custom-popup/custom-popup.component";
+import * as RoomActions from "../../state/room/room.actions";
+import * as RoomSelectors from "../../state/room/room.selectors";
 
 @Component({
   selector: 'app-explore',
@@ -12,23 +17,11 @@ import { CustomPopupComponent } from "./custom-popup/custom-popup.component";
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })
-export class ExplorePageComponent {
-  sampleRooms: Room[] = [
-    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75},
-    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60},
-    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25},
-    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45 },
-    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 },
-    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75},
-    { id: 1, capacity: 12, roomType: 'conference', hasProjector: true, hasWhiteboard: true, description: 'Modern conference room...', pricePerMinute: 0.75},
-    { id: 2, capacity: 8, roomType: 'meeting', hasProjector: false, hasWhiteboard: true, description: 'Cozy meeting room...', pricePerMinute: 0.60, },
-    { id: 3, capacity: 20, roomType: 'training', hasProjector: true, hasWhiteboard: true, description: 'Spacious training room...', pricePerMinute: 1.25 },
-    { id: 4, capacity: 6, roomType: 'huddle', hasProjector: false, hasWhiteboard: false, description: 'Quick huddle space...', pricePerMinute: 0.45},
-    { id: 5, capacity: 15, roomType: 'boardroom', hasProjector: true, hasWhiteboard: false, description: 'Executive boardroom...', pricePerMinute: 1.50 },
-    { id: 6, capacity: 25, roomType: 'presentation', hasProjector: true, hasWhiteboard: true, description: 'Large presentation room...', pricePerMinute: 1.75}
-  ];
-
+export class ExplorePageComponent implements OnInit {
+  filteredRooms$: Observable<Room[]>;
+  loading$: Observable<boolean>;
   filteredRooms: Room[] = [];
+
   searchTerm = '';
   capacityFilter = '';
   typeFilter = '';
@@ -37,51 +30,65 @@ export class ExplorePageComponent {
   whiteboardFilter = false;
   currentView: 'grid' | 'list' = 'grid';
 
-  // Popup properties
   showPopup = false;
   selectedRoom: Room | null = null;
 
+  roomsPerPage = 9;
+  currentPage = 1;
+  totalPages = 1;
+
+  constructor(private store: Store) {
+    this.filteredRooms$ = this.store.select(RoomSelectors.selectFilteredRooms);
+    this.loading$ = this.store.select(RoomSelectors.selectRoomsLoading);
+  }
+
   ngOnInit() {
-    this.filteredRooms = [...this.sampleRooms];
+    this.store.dispatch(RoomActions.loadRooms());
+
+    // Subscribe to room updates from store
+    this.filteredRooms$.subscribe(rooms => {
+      this.filteredRooms = rooms;
+      this.totalPages = Math.ceil(this.filteredRooms.length / this.roomsPerPage);
+      if (this.currentPage > this.totalPages) this.currentPage = this.totalPages || 1;
+    });
   }
 
   filterRooms() {
-    this.filteredRooms = this.sampleRooms.filter(room => {
-      const matchesSearch = room.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-        || room.roomType.toLowerCase().includes(this.searchTerm.toLowerCase())
-        || room.capacity.toString().includes(this.searchTerm);
+    const params: any = {};
 
-      let matchesCapacity = true;
-      if (this.capacityFilter) {
-        if (this.capacityFilter === '1-5') matchesCapacity = room.capacity <= 5;
-        else if (this.capacityFilter === '6-10') matchesCapacity = room.capacity >= 6 && room.capacity <= 10;
-        else if (this.capacityFilter === '11-20') matchesCapacity = room.capacity >= 11 && room.capacity <= 20;
-        else if (this.capacityFilter === '21+') matchesCapacity = room.capacity >= 21;
-      }
+    if (this.searchTerm) params.searchTerm = this.searchTerm;
 
-      const matchesType = !this.typeFilter || room.roomType === this.typeFilter;
+    if (this.capacityFilter) {
+      if (this.capacityFilter === '1-5') params.maxCapacity = 5;
+      else if (this.capacityFilter === '6-10') { params.minCapacity = 6; params.maxCapacity = 10; }
+      else if (this.capacityFilter === '11-20') { params.minCapacity = 11; params.maxCapacity = 20; }
+      else if (this.capacityFilter === '21+') params.minCapacity = 21;
+    }
 
-      let matchesPrice = true;
-      if (this.priceFilter) {
-        if (this.priceFilter === '0-0.5') matchesPrice = room.pricePerMinute <= 0.5;
-        else if (this.priceFilter === '0.5-1') matchesPrice = room.pricePerMinute > 0.5 && room.pricePerMinute <= 1;
-        else if (this.priceFilter === '1-2') matchesPrice = room.pricePerMinute > 1 && room.pricePerMinute <= 2;
-        else if (this.priceFilter === '2+') matchesPrice = room.pricePerMinute > 2;
-      }
+    if (this.typeFilter) params.roomType = this.typeFilter;
 
-      const matchesProjector = !this.projectorFilter || room.hasProjector;
-      const matchesWhiteboard = !this.whiteboardFilter || room.hasWhiteboard;
+    if (this.priceFilter) {
+      if (this.priceFilter === '0-0.5') params.maxPrice = 0.5;
+      else if (this.priceFilter === '0.5-1') { params.minPrice = 0.5; params.maxPrice = 1; }
+      else if (this.priceFilter === '1-2') { params.minPrice = 1; params.maxPrice = 2; }
+      else if (this.priceFilter === '2+') params.minPrice = 2;
+    }
 
-      return matchesSearch && matchesCapacity && matchesType && matchesPrice && matchesProjector && matchesWhiteboard;
-    });
+    if (this.projectorFilter) params.hasProjector = true;
+    if (this.whiteboardFilter) params.hasWhiteboard = true;
+
+    // Dispatch search action (backend will handle filters)
+    this.store.dispatch(RoomActions.searchRooms({ params }));
+
+    this.currentPage = 1;
   }
 
   setView(view: 'grid' | 'list') {
     this.currentView = view;
   }
 
-  formatRoomType(type: string) {
-    const types: Record<string, string> = {
+  formatRoomType(type: string): string {
+    const map: Record<string, string> = {
       meeting: 'Meeting Room',
       conference: 'Conference Room',
       training: 'Training Room',
@@ -89,18 +96,18 @@ export class ExplorePageComponent {
       presentation: 'Presentation Room',
       huddle: 'Huddle Room'
     };
-    return types[type] || type;
+    return map[type] || type;
   }
 
   bookRoom(roomId: number) {
-    const room = this.sampleRooms.find(r => r.id === roomId);
+    const room = this.filteredRooms.find(r => r.id === roomId);
     if (room) {
       alert(`Booking Room ${roomId} - ${this.formatRoomType(room.roomType)}\nCapacity: ${room.capacity}\nPrice: $${room.pricePerMinute.toFixed(2)}/min`);
     }
   }
 
   viewDetails(roomId: number) {
-    const room = this.sampleRooms.find(r => r.id === roomId);
+    const room = this.filteredRooms.find(r => r.id === roomId);
     if (room) {
       this.selectedRoom = room;
       this.showPopup = true;
@@ -110,5 +117,12 @@ export class ExplorePageComponent {
   onPopupClosed() {
     this.showPopup = false;
     this.selectedRoom = null;
+  }
+
+  goToPage(page: number) {
+    if (this.totalPages === 0) return;
+    if (page < 1) page = 1;
+    if (page > this.totalPages) page = this.totalPages;
+    this.currentPage = page;
   }
 }

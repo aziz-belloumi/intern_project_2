@@ -54,5 +54,29 @@ export const roomReducer = createReducer(
     loading: false,
     error: null,
   })),
-  on(RoomActions.deleteRoomFailure, (state, { error }) => ({ ...state, loading: false, error }))
+  on(RoomActions.deleteRoomFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  // Update the existing loadRoomsSuccess handler
+  on(RoomActions.loadRoomsSuccess, (state, { rooms }) => ({
+    ...state,
+    rooms,
+    filteredRooms: rooms,  // Initially, filtered = all rooms
+    loading: false,
+    error: null
+  })),
+
+// Update search handlers
+  on(RoomActions.searchRooms, state => ({ ...state, loading: true })),
+  on(RoomActions.searchRoomsSuccess, (state, { rooms }) => ({
+    ...state,
+    filteredRooms: rooms,  // Only update filteredRooms, keep original rooms intact
+    loading: false,
+    error: null
+  })),
+  on(RoomActions.searchRoomsFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  })),
+
+
 );
