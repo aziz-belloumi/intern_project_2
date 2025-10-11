@@ -127,5 +127,21 @@ namespace BookingSystem.Api.Controllers
             }
         }
 
+        [HttpGet("search-rooms")]
+        public async Task<IActionResult> SearchRooms([FromQuery] string? searchTerm,[FromQuery] int? minCapacity,[FromQuery] int? maxCapacity,[FromQuery] string? roomType,[FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,[FromQuery] bool? hasProjector,[FromQuery] bool? hasWhiteboard)
+        {
+            try
+            {
+                var rooms = await _roomService.SearchRoomsAsync(
+                    searchTerm, minCapacity, maxCapacity, roomType,
+                    minPrice, maxPrice, hasProjector, hasWhiteboard);
+                return Ok(rooms);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
     }
 }

@@ -10,6 +10,7 @@ namespace BookingSystem.Services.Services.Interfaces
         Task<bool> EditRoomAsync(int roomId , Room updatedRoom);
         Task<bool> DeleteRoomAsync(int roomId);
         Task<List<Room>?> GetUserRoomsAsync(int userId);
+        Task<List<Room>> SearchRoomsAsync(string? searchTerm,int? minCapacity,int? maxCapacity,string? roomType,decimal? minPrice,decimal? maxPrice,bool? hasProjector,bool? hasWhiteboard);
 
-    }
+}
 }
