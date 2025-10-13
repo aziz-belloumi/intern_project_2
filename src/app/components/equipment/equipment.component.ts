@@ -1,21 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import {FormsModule, NgForm} from '@angular/forms';
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { NgClass, NgForOf, NgIf, AsyncPipe } from "@angular/common";
+import { Store } from '@ngrx/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-interface Equipment {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  status: 'available' | 'maintenance' | 'unavailable';
-  price?: number;
-  serialNumber?: string;
-  hasWarranty?: boolean;
-  isPortable?: boolean;
-  owner?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Equipment } from '../../models/equipment.model';
+import { EquipmentBooking, EquipmentBookingStatus } from '../../models/equipment-booking.model';
+import * as EquipmentActions from '../../state/equipment/equipment.actions';
+import * as EquipmentSelectors from '../../state/equipment/equipment.selectors';
+import * as EquipmentBookingActions from '../../state/equipment-booking/equipment-booking.actions';
+import * as EquipmentBookingSelectors from '../../state/equipment-booking/equipment-booking.selectors';
 
 @Component({
   selector: 'app-equipment',
@@ -23,176 +18,96 @@ interface Equipment {
   standalone: true,
   imports: [
     FormsModule,
-    NgClass,
     NgForOf,
-    NgIf
+    NgIf,
   ],
   styleUrls: ['./equipment.component.css']
 })
-export class EquipmentPageComponent implements OnInit {
+export class EquipmentPageComponent implements OnInit, OnDestroy {
+  // Observables
+  userEquipment$!: Observable<Equipment[]>;
+  filteredEquipment$!: Observable<Equipment[]>;
+  loading$!: Observable<boolean>;
+  pendingBookings$!: Observable<EquipmentBooking[]>;
 
-  // Equipment arrays
+  // Local state
   userEquipment: Equipment[] = [];
-  allEquipment: Equipment[] = [];
   filteredEquipment: Equipment[] = [];
+  pendingBookings: EquipmentBooking[] = [];
 
-  // Form and UI state
   successMessage: boolean = false;
   searchTerm: string = '';
   filterType: string = '';
-  filterStatus: string = '';
 
-  // Current user (you might get this from a service)
-  currentUser: string = 'current-user-id'; // Replace with actual user ID
+  // Current user ID (replace with actual auth service)
+  currentUserId: number = 1;
 
-  constructor() { }
+  // Booking popup state
+  showBookingPopup: boolean = false;
+  selectedEquipmentForBooking: Equipment | null = null;
+  bookingStartTime: string = '';
+  bookingEndTime: string = '';
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.loadEquipment();
-    this.setupFilters();
-  }
+    // Load user's equipment
+    this.store.dispatch(EquipmentActions.loadUserEquipment({ userId: this.currentUserId }));
 
-  // Initialize with sample data (replace with actual API calls)
-  loadEquipment(): void {
-    // Sample user equipment
-    this.userEquipment = [
-      {
-        id: '1',
-        name: 'MacBook Pro 16"',
-        type: 'laptop',
-        description: 'High-performance laptop for development work. 32GB RAM, 1TB SSD.',
-        status: 'available',
-        price: 2999.99,
-        serialNumber: 'MBP123456',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'current-user-id',
-        createdAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-15')
-      },
-      {
-        id: '2',
-        name: 'Canon EOS R5',
-        type: 'camera',
-        description: '45MP full-frame mirrorless camera with 8K video recording.',
-        status: 'maintenance',
-        price: 3899.00,
-        serialNumber: 'CAM789012',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'current-user-id',
-        createdAt: new Date('2024-02-01'),
-        updatedAt: new Date('2024-02-10')
-      },
-      {
-        id: '3',
-        name: 'MacBook Pro 16"',
-        type: 'laptop',
-        description: 'High-performance laptop for development work. 32GB RAM, 1TB SSD.',
-        status: 'available',
-        price: 2999.99,
-        serialNumber: 'MBP123456',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'current-user-id',
-        createdAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-15')
-      },
-      {
-        id: '4',
-        name: 'Canon EOS R5',
-        type: 'camera',
-        description: '45MP full-frame mirrorless camera with 8K video recording.',
-        status: 'maintenance',
-        price: 3899.00,
-        serialNumber: 'CAM789012',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'current-user-id',
-        createdAt: new Date('2024-02-01'),
-        updatedAt: new Date('2024-02-10')
-      }
-    ];
+    // Load all equipment
+    this.store.dispatch(EquipmentActions.loadAllEquipment());
 
-    // Sample all equipment (including user's and others')
-    this.allEquipment = [
-      ...this.userEquipment,
-      {
-        id: '3',
-        name: 'Dell XPS Desktop',
-        type: 'desktop',
-        description: 'Powerful desktop computer for video editing and 3D rendering.',
-        status: 'available',
-        price: 1899.99,
-        serialNumber: 'DELL345678',
-        hasWarranty: false,
-        isPortable: false,
-        owner: 'other-user-1',
-        createdAt: new Date('2024-01-20'),
-        updatedAt: new Date('2024-01-20')
-      },
-      {
-        id: '4',
-        name: 'Epson Projector',
-        type: 'projector',
-        description: '4K projector for presentations and meetings.',
-        status: 'available',
-        price: 1299.00,
-        serialNumber: 'PROJ901234',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'other-user-2',
-        createdAt: new Date('2024-02-05'),
-        updatedAt: new Date('2024-02-05')
-      },
-      {
-        id: '5',
-        name: 'Audio Interface',
-        type: 'audio',
-        description: 'Professional audio interface for recording and mixing.',
-        status: 'unavailable',
-        price: 599.99,
-        serialNumber: 'AUD567890',
-        hasWarranty: true,
-        isPortable: true,
-        owner: 'other-user-3',
-        createdAt: new Date('2024-01-10'),
-        updatedAt: new Date('2024-02-15')
-      }
-    ];
+    // Load pending bookings
+    this.store.dispatch(EquipmentBookingActions.loadPendingBookings({ userId: this.currentUserId }));
 
-    this.filteredEquipment = [...this.allEquipment];
-  }
+    // Subscribe to selectors
+    this.userEquipment$ = this.store.select(EquipmentSelectors.selectUserEquipment);
+    this.filteredEquipment$ = this.store.select(EquipmentSelectors.selectFilteredEquipment);
+    this.loading$ = this.store.select(EquipmentSelectors.selectEquipmentLoading);
+    this.pendingBookings$ = this.store.select(EquipmentBookingSelectors.selectPendingBookings);
 
-  // Setup filter watchers
-  setupFilters(): void {
-    // You might want to use reactive forms or observables for better performance
-    // This is a simple implementation
-  }
+    // Subscribe to get local copies
+    this.userEquipment$.pipe(takeUntil(this.destroy$)).subscribe(equipment => {
+      this.userEquipment = equipment;
+    });
 
-  // Filter equipment based on search term and filters
-  filterEquipment(): void {
-    this.filteredEquipment = this.allEquipment.filter(equipment => {
-      const matchesSearch = !this.searchTerm ||
-        equipment.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        equipment.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        equipment.type.toLowerCase().includes(this.searchTerm.toLowerCase());
+    this.filteredEquipment$.pipe(takeUntil(this.destroy$)).subscribe(equipment => {
+      this.filteredEquipment = equipment;
+    });
 
-      const matchesType = !this.filterType || equipment.type === this.filterType;
-      const matchesStatus = !this.filterStatus || equipment.status === this.filterStatus;
-
-      return matchesSearch && matchesType && matchesStatus;
+    this.pendingBookings$.pipe(takeUntil(this.destroy$)).subscribe(bookings => {
+      this.pendingBookings = bookings;
     });
   }
 
-  // Handle search term changes
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Filter/Search equipment
   onSearchChange(): void {
     this.filterEquipment();
   }
 
-  // Handle filter changes
   onFilterChange(): void {
     this.filterEquipment();
+  }
+
+  filterEquipment(): void {
+    const params: any = {};
+
+    if (this.searchTerm) {
+      params.searchTerm = this.searchTerm;
+    }
+
+    if (this.filterType) {
+      params.type = this.filterType;
+    }
+
+    this.store.dispatch(EquipmentActions.searchEquipment({ params }));
   }
 
   // Add new equipment
@@ -201,127 +116,132 @@ export class EquipmentPageComponent implements OnInit {
       const formData = form.value;
 
       const newEquipment: Equipment = {
-        id: this.generateId(),
         name: formData.name,
         type: formData.type,
         description: formData.description,
-        status: formData.status,
         price: formData.price || undefined,
         serialNumber: formData.serialNumber || undefined,
         hasWarranty: formData.hasWarranty || false,
         isPortable: formData.isPortable || false,
-        owner: this.currentUser,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        userId: this.currentUserId
       };
 
-      // Add to user equipment
-      this.userEquipment.push(newEquipment);
+      this.store.dispatch(EquipmentActions.createEquipment({ equipment: newEquipment }));
 
-      // Add to all equipment
-      this.allEquipment.push(newEquipment);
-
-      // Update filtered list
-      this.filterEquipment();
-
-      // Show success message
       this.showSuccessMessage();
-
-      // Reset form
       form.resetForm();
-
-      console.log('Equipment added:', newEquipment);
-
-      // TODO: Replace with actual API call
-      // this.equipmentService.addEquipment(newEquipment).subscribe(
-      //   response => {
-      //     this.showSuccessMessage();
-      //     this.loadEquipment(); // Reload from server
-      //   },
-      //   error => {
-      //     console.error('Error adding equipment:', error);
-      //   }
-      // );
     }
   }
 
-  // Cancel form
   onCancel(form: NgForm): void {
     form.resetForm();
     this.successMessage = false;
   }
 
   // Update equipment
-  updateEquipment(equipmentId: string): void {
+  updateEquipment(equipmentId: number): void {
     const equipment = this.userEquipment.find(eq => eq.id === equipmentId);
     if (equipment) {
-      // TODO: Implement update modal/form or navigate to update page
-      console.log('Update equipment:', equipment);
+      // TODO: Open update modal/popup
+      const updatedData = prompt('Enter new name:', equipment.name);
 
-      // Example: You might want to:
-      // 1. Open a modal with pre-filled form
-      // 2. Navigate to an edit page
-      // 3. Enable inline editing
+      if (updatedData) {
+        const updatedEquipment: Equipment = {
+          ...equipment,
+          name: updatedData
+        };
 
-      // For now, let's simulate an update
-      equipment.updatedAt = new Date();
-
-      // TODO: Replace with actual API call
-      // this.equipmentService.updateEquipment(equipment).subscribe(
-      //   response => {
-      //     console.log('Equipment updated successfully');
-      //     this.loadEquipment();
-      //   },
-      //   error => {
-      //     console.error('Error updating equipment:', error);
-      //   }
-      // );
+        this.store.dispatch(EquipmentActions.updateEquipment({
+          id: equipmentId,
+          equipment: updatedEquipment
+        }));
+      }
     }
   }
 
   // Delete equipment
-  deleteEquipment(equipmentId: string): void {
-    const confirmDelete = confirm('Are you sure you want to delete this equipment?');
+  deleteEquipment(equipmentId: number): void {
+    const equipment = this.userEquipment.find(eq => eq.id === equipmentId);
+    const confirmDelete = confirm(`Are you sure you want to delete "${equipment?.name}"?`);
 
     if (confirmDelete) {
-      // Remove from user equipment
-      this.userEquipment = this.userEquipment.filter(eq => eq.id !== equipmentId);
-
-      // Remove from all equipment
-      this.allEquipment = this.allEquipment.filter(eq => eq.id !== equipmentId);
-
-      // Update filtered list
-      this.filterEquipment();
-
-      console.log('Equipment deleted:', equipmentId);
-
-      // TODO: Replace with actual API call
-      // this.equipmentService.deleteEquipment(equipmentId).subscribe(
-      //   response => {
-      //     console.log('Equipment deleted successfully');
-      //     this.loadEquipment();
-      //   },
-      //   error => {
-      //     console.error('Error deleting equipment:', error);
-      //   }
-      // );
+      this.store.dispatch(EquipmentActions.deleteEquipment({ id: equipmentId }));
     }
   }
 
-  // Show success message
+  // Book equipment
+  bookEquipment(equipmentId: number): void {
+    const equipment = this.filteredEquipment.find(eq => eq.id === equipmentId);
+
+    if (!equipment) {
+      alert('Equipment not found!');
+      return;
+    }
+
+    if (equipment.userId === this.currentUserId) {
+      alert('You cannot book your own equipment!');
+      return;
+    }
+
+    this.selectedEquipmentForBooking = equipment;
+    this.showBookingPopup = true;
+  }
+
+  confirmBookingReservation(): void {
+    if (!this.selectedEquipmentForBooking || !this.bookingStartTime || !this.bookingEndTime) {
+      alert('Please fill in all booking details');
+      return;
+    }
+
+    const start = new Date(this.bookingStartTime);
+    const end = new Date(this.bookingEndTime);
+    const duration = Math.floor((end.getTime() - start.getTime()) / 60000);
+
+    if (duration <= 0) {
+      alert('End time must be after start time');
+      return;
+    }
+
+    const booking: EquipmentBooking = {
+      equipmentId: this.selectedEquipmentForBooking.id!,
+      userId: this.currentUserId,
+      startTime: start.toISOString(),
+      endTime: end.toISOString(),
+      durationMinutes: duration,
+      status: EquipmentBookingStatus.Pending
+    };
+
+    this.store.dispatch(EquipmentBookingActions.createBooking({ booking }));
+
+    alert('Booking request submitted! Status: Pending');
+    this.closeBookingPopup();
+  }
+
+  closeBookingPopup(): void {
+    this.showBookingPopup = false;
+    this.selectedEquipmentForBooking = null;
+    this.bookingStartTime = '';
+    this.bookingEndTime = '';
+  }
+
+  // Confirm pending booking
+  confirmPendingBooking(bookingId: number): void {
+    this.store.dispatch(EquipmentBookingActions.confirmBooking({ bookingId }));
+  }
+
+  // Cancel pending booking
+  cancelPendingBooking(bookingId: number): void {
+    this.store.dispatch(EquipmentBookingActions.cancelBooking({ bookingId }));
+  }
+
+  // Helper methods
   private showSuccessMessage(): void {
     this.successMessage = true;
     setTimeout(() => {
       this.successMessage = false;
-    }, 5000); // Hide after 5 seconds
+    }, 5000);
   }
 
-  // Generate simple ID (replace with proper UUID in production)
-  private generateId(): string {
-    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-  }
-
-  // Helper method to get equipment type display name
   getEquipmentTypeDisplay(type: string): string {
     const typeMap: { [key: string]: string } = {
       'laptop': 'Laptop',
@@ -333,22 +253,9 @@ export class EquipmentPageComponent implements OnInit {
       'networking': 'Networking',
       'other': 'Other'
     };
-
     return typeMap[type] || type;
   }
 
-  // Helper method to get status display name
-  getStatusDisplay(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'available': 'Available',
-      'maintenance': 'Under Maintenance',
-      'unavailable': 'Unavailable'
-    };
-
-    return statusMap[status] || status;
-  }
-
-  // Helper method to format price
   formatPrice(price?: number): string {
     if (!price) return 'N/A';
     return new Intl.NumberFormat('en-US', {
@@ -357,12 +264,24 @@ export class EquipmentPageComponent implements OnInit {
     }).format(price);
   }
 
-  // Helper method to format date
-  formatDate(date: Date): string {
+  formatDateTime(date?: string): string {
+    if (!date) return 'N/A';
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
-    }).format(date);
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(date));
+  }
+
+  getBookingStatusDisplay(status: EquipmentBookingStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [EquipmentBookingStatus.Pending]: 'Pending',
+      [EquipmentBookingStatus.Confirmed]: 'Confirmed',
+      [EquipmentBookingStatus.Cancelled]: 'Cancelled',
+      [EquipmentBookingStatus.Completed]: 'Completed'
+    };
+    return statusMap[status] || 'Unknown';
   }
 }

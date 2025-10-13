@@ -1,66 +1,28 @@
 <main class="main-content">
-  <!-- Page Header -->
-  <div class="page-header">
-    <h1 class="page-title">Equipment Management</h1>
-    <p class="page-description">Manage your equipment inventory and add new items</p>
-  </div>
-
-  <!-- User's Equipment Section -->
-  <div class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">My Equipment</h2>
-      <p class="section-description">Equipment you own and manage</p>
-    </div>
-
-    <div class="equipment-grid" *ngIf="userEquipment.length > 0; else noUserEquipment">
-      <div class="equipment-card" *ngFor="let equipment of userEquipment">
-        <div class="equipment-name">{{equipment.name}}</div>
-        <div class="equipment-type">{{equipment.type}}</div>
-        <div class="equipment-description">{{equipment.description}}</div>
-        <div class="equipment-status" [ngClass]="'status-' + equipment.status">
-          {{equipment.status}}
-        </div>
-        <div class="equipment-actions">
-          <button class="btn btn-small btn-primary" (click)="updateEquipment(equipment.id)">Update</button>
-          <button class="btn btn-small btn-danger" (click)="deleteEquipment(equipment.id)">Delete</button>
-        </div>
-      </div>
-    </div>
-
-    <ng-template #noUserEquipment>
-      <div class="empty-state">
-        <p>You don't have any equipment yet. Add your first equipment below!</p>
-      </div>
-    </ng-template>
-  </div>
-
-  <!-- Add New Equipment Section -->
-  <div class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Add New Equipment</h2>
-      <p class="section-description">Fill in the details below to add new equipment to your inventory</p>
+  <!-- Add Equipment Form -->
+  <div class="form-container">
+    <div class="form-header">
+      <h2 class="form-title">Add New Equipment</h2>
+      <p class="form-description">Fill in the details below to add new equipment</p>
     </div>
 
     <div class="success-message" *ngIf="successMessage">
-      Equipment has been successfully added to the system!
+      ✅ Equipment added successfully!
     </div>
 
-    <form #addEquipmentForm="ngForm" (ngSubmit)="onSubmit(addEquipmentForm)">
+    <form #equipmentForm="ngForm" (ngSubmit)="onSubmit(equipmentForm)">
       <div class="form-grid">
-        <!-- Equipment Name -->
         <div class="form-group">
           <label class="form-label required">Equipment Name</label>
-          <input type="text" class="form-input" name="name" ngModel required placeholder="e.g., MacBook Pro 16">
-          <div class="form-hint">Name or model of the equipment</div>
+          <input type="text" class="form-input" name="name" ngModel required placeholder="e.g., Dell Laptop" />
         </div>
 
-        <!-- Equipment Type -->
         <div class="form-group">
           <label class="form-label required">Equipment Type</label>
           <select class="form-select" name="type" ngModel required>
-            <option value="">Select equipment type...</option>
+            <option value="">Select type...</option>
             <option value="laptop">Laptop</option>
-            <option value="desktop">Desktop Computer</option>
+            <option value="desktop">Desktop</option>
             <option value="monitor">Monitor</option>
             <option value="projector">Projector</option>
             <option value="camera">Camera</option>
@@ -70,81 +32,108 @@
           </select>
         </div>
 
-        <!-- Purchase Price -->
         <div class="form-group">
-          <label class="form-label">Purchase Price</label>
+          <label class="form-label">Price (optional)</label>
           <div class="price-input-group">
             <span class="currency-symbol">$</span>
-            <input type="number" class="form-input price-input" name="price" ngModel step="0.01" min="0" placeholder="1200.00">
-          </div>
-          <div class="form-hint">Original purchase price (optional)</div>
-        </div>
-
-        <!-- Status -->
-        <div class="form-group">
-          <label class="form-label required">Status</label>
-          <select class="form-select" name="status" ngModel required>
-            <option value="">Select status...</option>
-            <option value="available">Available</option>
-            <option value="maintenance">Under Maintenance</option>
-            <option value="unavailable">Unavailable</option>
-          </select>
-        </div>
-
-        <!-- Specifications -->
-        <div class="form-group">
-          <label class="form-label">Specifications</label>
-          <div class="checkbox-group">
-            <label class="checkbox-item">
-              <input type="checkbox" name="hasWarranty" ngModel>
-              <span class="checkbox-label">Under Warranty</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="isPortable" ngModel>
-              <span class="checkbox-label">Portable</span>
-            </label>
+            <input type="number" class="form-input price-input" name="price" ngModel step="0.01" min="0" placeholder="e.g., 5.99" />
           </div>
         </div>
 
-        <!-- Serial Number -->
         <div class="form-group">
-          <label class="form-label">Serial Number</label>
-          <input type="text" class="form-input" name="serialNumber" ngModel placeholder="e.g., SN123456789">
-          <div class="form-hint">Equipment serial number (optional)</div>
+          <label class="form-label">Serial Number (optional)</label>
+          <input type="text" class="form-input" name="serialNumber" ngModel placeholder="e.g., SN123456" />
         </div>
       </div>
 
-      <!-- Description -->
       <div class="form-group full-width">
-        <label class="form-label required">Equipment Description</label>
-        <textarea class="form-textarea" name="description" ngModel required placeholder="Describe the equipment specifications, condition, and any special notes..."></textarea>
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" name="description" ngModel placeholder="Describe the equipment..."></textarea>
       </div>
 
-      <!-- Form Actions -->
+      <div class="equipment-checkboxes">
+        <label class="checkbox-item">
+          <input type="checkbox" name="hasWarranty" ngModel id="hasWarranty" />
+          <span class="checkbox-label">Has Warranty</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" name="isPortable" ngModel id="isPortable" />
+          <span class="checkbox-label">Portable</span>
+        </label>
+      </div>
+
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Equipment</button>
-        <button type="button" class="btn btn-secondary" (click)="onCancel(addEquipmentForm)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!equipmentForm.valid">
+          <svg fill="currentColor" viewBox="0 0 24 24" *ngIf="!equipmentForm.valid" class="loading-icon" style="display: none;"></svg> <!-- Optional loading -->
+          Add Equipment
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel(equipmentForm)">Cancel</button>
       </div>
     </form>
   </div>
 
-  <!-- All Equipment Section -->
-  <div class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">All Equipment</h2>
-      <p class="section-description">Browse all equipment in the system</p>
+  <hr class="section-divider" />
+
+  <!-- My Equipment -->
+  <div class="my-equipment-container">
+    <div class="explore-header">
+      <h3 class="form-title">My Equipment</h3>
     </div>
 
-    <!-- Search and Filter -->
-    <div class="equipment-filters">
+    <div *ngIf="userEquipment.length === 0" class="no-results">
+      <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <h3>You haven't added any equipment yet</h3>
+      <p>Use the form above to get started</p>
+    </div>
+
+    <div class="equipment-list" *ngIf="userEquipment.length > 0">
+      <div *ngFor="let eq of userEquipment" class="equipment-list-item">
+        <div class="equipment-list-info">
+          <strong>{{ eq.name }}</strong> — {{ getEquipmentTypeDisplay(eq.type) }}
+          <p class="equipment-list-desc">{{ eq.description || 'No description' }}</p>
+        </div>
+        <div class="equipment-list-actions">
+          <button class="btn btn-outline" (click)="updateEquipment(eq.id!)">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            Edit
+          </button>
+          <button class="btn btn-danger" (click)="deleteEquipment(eq.id!)">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Filter/Search Section -->
+  <div class="filter-section">
+    <div class="explore-header">
+      <h3 class="form-title">Find Equipment</h3>
+    </div>
+    <div class="filters-row">
       <div class="filter-group">
-        <input type="text" class="form-input search-input" [(ngModel)]="searchTerm" placeholder="Search equipment...">
+        <input
+          type="text"
+          class="form-input search-input"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          placeholder="Search by name..."
+        />
       </div>
       <div class="filter-group">
-        <select class="form-select filter-select" [(ngModel)]="filterType">
+        <select class="form-select" [(ngModel)]="filterType" (change)="onFilterChange()">
           <option value="">All Types</option>
           <option value="laptop">Laptop</option>
-          <option value="desktop">Desktop Computer</option>
+          <option value="desktop">Desktop</option>
           <option value="monitor">Monitor</option>
           <option value="projector">Projector</option>
           <option value="camera">Camera</option>
@@ -153,34 +142,130 @@
           <option value="other">Other</option>
         </select>
       </div>
-      <div class="filter-group">
-        <select class="form-select filter-select" [(ngModel)]="filterStatus">
-          <option value="">All Status</option>
-          <option value="available">Available</option>
-          <option value="maintenance">Under Maintenance</option>
-          <option value="unavailable">Unavailable</option>
-        </select>
-      </div>
+    </div>
+  </div>
+
+  <!-- Available Equipment -->
+  <div class="my-equipment-container">
+    <div class="explore-header">
+      <h3 class="form-title">Available Equipment</h3>
     </div>
 
-    <div class="equipment-grid" *ngIf="allEquipment.length > 0; else noEquipment">
-      <div class="equipment-card" *ngFor="let equipment of filteredEquipment">
-        <div class="equipment-name">{{equipment.name}}</div>
-        <div class="equipment-type">{{equipment.type}}</div>
-        <div class="equipment-description">{{equipment.description}}</div>
-        <div class="equipment-status" [ngClass]="'status-' + equipment.status">
-          {{equipment.status}}
+    <div *ngIf="filteredEquipment.length === 0" class="no-results">
+      <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <h3>No equipment found</h3>
+      <p>Try adjusting your search or filters</p>
+    </div>
+
+    <div class="rooms-container grid-view" *ngIf="filteredEquipment.length > 0">
+      <div *ngFor="let equipment of filteredEquipment" class="equipment-card">
+        <div class="equipment-image">
+          <div class="equipment-type-badge">{{ getEquipmentTypeDisplay(equipment.type) }}</div>
         </div>
-        <div class="equipment-owner" *ngIf="equipment.owner">
-          <span class="owner-label">Owner:</span> {{equipment.owner}}
+
+        <div class="equipment-content">
+          <div class="equipment-header">
+            <h3 class="equipment-title">{{ equipment.name }}</h3>
+            <div class="equipment-price" *ngIf="equipment.price">{{ formatPrice(equipment.price) }}</div>
+          </div>
+
+          <p class="equipment-description">{{ equipment.description || 'No description available' }}</p>
+
+          <div class="equipment-features">
+            <span *ngIf="equipment.hasWarranty" class="feature-tag warranty">Warranty</span>
+            <span *ngIf="equipment.isPortable" class="feature-tag portable">Portable</span>
+            <span *ngIf="equipment.serialNumber" class="feature-tag serial">SN: {{ equipment.serialNumber }}</span>
+          </div>
+
+          <div class="equipment-actions">
+            <button class="btn btn-primary" (click)="bookEquipment(equipment.id!)">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              Book Now
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <ng-template #noEquipment>
-      <div class="empty-state">
-        <p>No equipment found in the system.</p>
+  <hr class="section-divider" />
+
+
+
+  <!-- Pending Bookings -->
+  <div class="bookings-container">
+    <div class="explore-header">
+      <h3 class="form-title">Pending Bookings</h3>
+    </div>
+
+    <div *ngIf="pendingBookings.length === 0" class="no-results">
+      <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <h3>No pending bookings</h3>
+      <p>Bookings will appear here once created</p>
+    </div>
+
+    <div class="bookings-table-container" *ngIf="pendingBookings.length > 0">
+      <table class="bookings-table">
+        <thead>
+        <tr>
+          <th>Equipment ID</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Duration (min)</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let booking of pendingBookings">
+          <td>{{ booking.equipmentId }}</td>
+          <td>{{ formatDateTime(booking.startTime) }}</td>
+          <td>{{ formatDateTime(booking.endTime) }}</td>
+          <td>{{ booking.durationMinutes }}</td>
+          <td>{{ getBookingStatusDisplay(booking.status) }}</td>
+          <td>
+            <button class="btn btn-primary btn-small" (click)="confirmPendingBooking(booking.id!)">Confirm</button>
+            <button class="btn btn-danger btn-small" (click)="cancelPendingBooking(booking.id!)">Cancel</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Booking Popup -->
+  <div class="popup-overlay" *ngIf="showBookingPopup" (click)="closeBookingPopup()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h3 class="popup-title">Book Equipment: {{ selectedEquipmentForBooking?.name }}</h3>
+        <button class="popup-close" (click)="closeBookingPopup()">
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
       </div>
-    </ng-template>
+
+      <div class="popup-body">
+        <div class="form-group">
+          <label class="form-label required">Start Time</label>
+          <input type="datetime-local" class="form-input" [(ngModel)]="bookingStartTime" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label required">End Time</label>
+          <input type="datetime-local" class="form-input" [(ngModel)]="bookingEndTime" required />
+        </div>
+      </div>
+
+      <div class="popup-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBookingPopup()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmBookingReservation()">Confirm Booking</button>
+      </div>
+    </div>
   </div>
 </main>

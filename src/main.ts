@@ -16,6 +16,10 @@ import {recommendationReducer} from "./app/state/recommendation/recommendation.r
 import {RecommendationEffects} from "./app/state/recommendation/recommendation.effects";
 import {roomAvailabilityReducer} from "./app/state/room-availability/room-availability.reducer";
 import {RoomAvailabilityEffects} from "./app/state/room-availability/room-availability.effects";
+import {equipmentReducer} from "./app/state/equipment/equipment.reducer";
+import {EquipmentEffects} from "./app/state/equipment/equipment.effects";
+import {equipmentBookingReducer} from "./app/state/equipment-booking/equipment-booking.reducer";
+import {EquipmentBookingEffects} from "./app/state/equipment-booking/equipment-booking.effects";
 
 
 bootstrapApplication(AppComponent, {
@@ -26,8 +30,10 @@ bootstrapApplication(AppComponent, {
       booking: bookingReducer ,
       recommendation: recommendationReducer ,
       roomAvailability: roomAvailabilityReducer,
+      equipment: equipmentReducer,
+      equipmentBooking: equipmentBookingReducer,
     }),
-    provideEffects([AuthEffects,RoomEffects,BookingEffects,RecommendationEffects,RoomAvailabilityEffects]),
+    provideEffects([AuthEffects,RoomEffects,BookingEffects,RecommendationEffects,RoomAvailabilityEffects,EquipmentEffects,EquipmentBookingEffects]),
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
