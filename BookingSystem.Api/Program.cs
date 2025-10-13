@@ -1,4 +1,5 @@
 using BookingSystem.Data.Data;
+using BookingSystem.Services;
 using BookingSystem.Services.Helpers;
 using BookingSystem.Services.Services.Implementations;
 using BookingSystem.Services.Services.Interfaces;
@@ -24,6 +25,8 @@ builder.Services.AddSingleton<RoomWebSocketHandler>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+builder.Services.AddScoped<IEquipmentBookingService, EquipmentBookingService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();

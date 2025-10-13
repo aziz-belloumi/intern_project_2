@@ -13,6 +13,7 @@ namespace BookingSystem.Data.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
+        public DbSet<EquipmentBooking> EquipmentBookings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,6 +91,60 @@ namespace BookingSystem.Data.Data
                       .WithMany()
                       .HasForeignKey(b => b.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Equipment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.Type)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.Description)
+                      .IsRequired()
+                      .HasMaxLength(1000);
+
+                entity.Property(e => e.Price)
+                      .HasPrecision(18, 2);
+
+                entity.Property(e => e.SerialNumber)
+                      .HasMaxLength(100);
+
+                // Relationship: Equipment -> User (Owner)
+                entity.HasOne(e => e.User)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<EquipmentBooking>(entity =>
+            {
+                entity.HasKey(eb => eb.Id);
+
+                // Configure the enum as string in database
+                entity.Property(eb => eb.Status)
+                      .HasConversion<string>()
+                      .HasMaxLength(20);
+
+                // Relationship: EquipmentBooking -> Equipment
+                entity.HasOne(eb => eb.Equipment)
+                      .WithMany(e => e.EquipmentBookings) // ← CHANGE ONLY THIS LINE
+                      .HasForeignKey(eb => eb.EquipmentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Relationship: EquipmentBooking -> User
+                entity.HasOne(eb => eb.User)
+                      .WithMany() // ← LEAVE THIS AS IS
+                      .HasForeignKey(eb => eb.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(eb => eb.DurationMinutes)
+                      .IsRequired();
             });
         }
     }

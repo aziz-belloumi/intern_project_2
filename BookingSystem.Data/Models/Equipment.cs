@@ -2,20 +2,13 @@
 
 namespace BookingSystem.Data.Models
 {
-    public enum EquipmentStatus
-    {
-        Pending,
-        Confirmed,
-        Cancelled,
-        Completed
-    }
+    
     public class Equipment
     {
         public int Id { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }
         public required string Description { get; set; }
-        public required EquipmentStatus status{ get; set; } // available | maintenance | unavailable
         public decimal? Price { get; set; }
         public string? SerialNumber { get; set; }
         public bool HasWarranty { get; set; }
@@ -28,5 +21,8 @@ namespace BookingSystem.Data.Models
         public int? UserId { get; set; }
         [JsonIgnore]
         public User? User { get; set; }
+
+        [JsonIgnore]
+        public ICollection<EquipmentBooking> EquipmentBookings { get; set; } = new List<EquipmentBooking>(); // bookings associated with the room
     }
 }

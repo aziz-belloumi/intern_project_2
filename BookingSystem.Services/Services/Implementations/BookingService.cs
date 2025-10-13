@@ -99,7 +99,7 @@ namespace BookingSystem.Services.Services.Implementations
                 // ✅ Launch timer in background
                 _ = Task.Run(async () =>
                 {
-                    await Task.Delay(TimeSpan.FromMinutes(4));
+                    await Task.Delay(TimeSpan.FromMinutes(2));
 
                     using (var scope = _scopeFactory.CreateScope())
                     {

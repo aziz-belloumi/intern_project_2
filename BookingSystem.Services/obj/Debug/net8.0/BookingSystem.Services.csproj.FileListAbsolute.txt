@@ -1,3 +1,4 @@
+C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.csproj.AssemblyReference.cache
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.AssemblyInfoInputs.cache
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.AssemblyInfo.cs
@@ -8,7 +9,6 @@ C:\Users\bello\Desktop\back-end\BookingSystem.Services\bin\Debug\net8.0\BookingS
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\bin\Debug\net8.0\BookingSystem.Services.pdb
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\bin\Debug\net8.0\BookingSystem.Data.dll
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\bin\Debug\net8.0\BookingSystem.Data.pdb
-C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.csproj.AssemblyReference.cache
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingS.9D81B5B5.Up2Date
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\BookingSystem.Services.dll
 C:\Users\bello\Desktop\back-end\BookingSystem.Services\obj\Debug\net8.0\refint\BookingSystem.Services.dll
