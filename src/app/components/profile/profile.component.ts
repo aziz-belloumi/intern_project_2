@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { User } from "../../models/user.model";
 import { selectUser } from "../../state/auth/auth.selectors";
 import { Store } from '@ngrx/store';
-import {filter, Subject} from 'rxjs';
+import { filter, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as BookingActions from "../../state/booking/booking.actions";
 import * as BookingSelectors from "../../state/booking/booking.selectors";
-import {Booking} from "../../models/booking.model";
-import {MatIconModule} from "@angular/material/icon";
-
+import { Booking, BookingStatus } from "../../models/booking.model";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +29,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit() {
+    // Subscribe to user data
     this.store.select(selectUser)
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
@@ -42,27 +42,24 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         } else {
           this.preferredRoomIds = [];
         }
-        if (user) {
-          this.store.dispatch(BookingActions.loadUserBookings({ userId: this.user!.id, lastBookingId: 0 }));
-          this.store.dispatch(BookingActions.loadUserStatistics({ userId: this.user!.id }));
-          this.store.dispatch(BookingActions.loadUserRecentBookings({ userId: this.user!.id }));
-        }
       });
+
     // Select booking history from store
     this.store.select(BookingSelectors.selectBookings)
-      .pipe(takeUntil(this.destroy$),filter(history => history.length > 0))
+      .pipe(takeUntil(this.destroy$), filter(history => history.length > 0))
       .subscribe(history => this.bookingHistory = history);
 
     // Select booking stats from store
     this.store.select(BookingSelectors.selectBookingStatistics)
-      .pipe(takeUntil(this.destroy$),filter(stats => stats.length > 0))
+      .pipe(takeUntil(this.destroy$), filter(stats => stats.length > 0))
       .subscribe(stats => this.bookingStats = stats);
 
     // Select recent booking from store
     this.store.select(BookingSelectors.selectRecentBookings)
-      .pipe(takeUntil(this.destroy$),filter(recentBooking => recentBooking.length > 0))
+      .pipe(takeUntil(this.destroy$), filter(recentBooking => recentBooking.length > 0))
       .subscribe(recentBooking => this.recentBooking = recentBooking);
   }
+
   loadMoreBookings() {
     if (!this.bookingHistory.length) return;
     const lastBookingId = this.bookingHistory[this.bookingHistory.length - 1].id;
@@ -71,12 +68,44 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Helper method to convert booking status enum to display string
+  getBookingStatusDisplay(status?: BookingStatus): string {
+    if (status === undefined || status === null) return 'Unknown';
+    const statusMap: { [key: number]: string } = {
+      [BookingStatus.Pending]: 'Pending',
+      [BookingStatus.Confirmed]: 'Confirmed',
+      [BookingStatus.Cancelled]: 'Cancelled',
+      [BookingStatus.Completed]: 'Completed'
+    };
+    return statusMap[status] || 'Unknown';
+  }
+
+  // Helper method to get status CSS class
+  getBookingStatusClass(status?: BookingStatus): string {
+    if (status === undefined || status === null) return 'status-pending';
+    const classMap: { [key: number]: string } = {
+      [BookingStatus.Pending]: 'status-pending',
+      [BookingStatus.Confirmed]: 'status-confirmed',
+      [BookingStatus.Cancelled]: 'status-cancelled',
+      [BookingStatus.Completed]: 'status-completed'
+    };
+    return classMap[status] || 'status-pending';
+  }
+
+  // Helper method to format date
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return 'N/A';
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(dateString));
+  }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-
   }
 }
-// we need to filter to make sure the result appear one time
-// // ///  remember modify the booking state !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

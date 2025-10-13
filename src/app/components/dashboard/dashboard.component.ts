@@ -43,6 +43,11 @@ export class DashboardPageComponent implements OnInit {
         }));
         this.store.dispatch(RoomActions.loadUserRooms({ userId: this.currentUserId }));
         this.store.dispatch(BookingActions.loadPendingBookings({ userId: this.currentUserId }));
+
+        // Profile actions dispatched here for better performance
+        this.store.dispatch(BookingActions.loadUserBookings({ userId: this.currentUserId, lastBookingId: 0 }));
+        this.store.dispatch(BookingActions.loadUserStatistics({ userId: this.currentUserId }));
+        this.store.dispatch(BookingActions.loadUserRecentBookings({ userId: this.currentUserId }));
       }
     });
   }

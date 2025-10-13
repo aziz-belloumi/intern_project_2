@@ -20,6 +20,7 @@ import * as EquipmentBookingSelectors from '../../state/equipment-booking/equipm
     FormsModule,
     NgForOf,
     NgIf,
+    NgClass,
   ],
   styleUrls: ['./equipment.component.css']
 })
@@ -47,6 +48,11 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
   selectedEquipmentForBooking: Equipment | null = null;
   bookingStartTime: string = '';
   bookingEndTime: string = '';
+
+  // Alert/Notification popup state
+  showAlertPopup: boolean = false;
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
 
   private destroy$ = new Subject<void>();
 
@@ -174,12 +180,12 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
     const equipment = this.filteredEquipment.find(eq => eq.id === equipmentId);
 
     if (!equipment) {
-      alert('Equipment not found!');
+      this.showAlert('Equipment not found!', 'error');
       return;
     }
 
     if (equipment.userId === this.currentUserId) {
-      alert('You cannot book your own equipment!');
+      this.showAlert('You cannot book your own equipment!', 'error');
       return;
     }
 
@@ -189,7 +195,7 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
 
   confirmBookingReservation(): void {
     if (!this.selectedEquipmentForBooking || !this.bookingStartTime || !this.bookingEndTime) {
-      alert('Please fill in all booking details');
+      this.showAlert('Please fill in all booking details', 'error');
       return;
     }
 
@@ -198,7 +204,7 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
     const duration = Math.floor((end.getTime() - start.getTime()) / 60000);
 
     if (duration <= 0) {
-      alert('End time must be after start time');
+      this.showAlert('End time must be after start time', 'error');
       return;
     }
 
@@ -213,7 +219,7 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(EquipmentBookingActions.createBooking({ booking }));
 
-    alert('Booking request submitted! Status: Pending');
+    this.showAlert('Booking request submitted! Status: Pending', 'success');
     this.closeBookingPopup();
   }
 
@@ -232,6 +238,18 @@ export class EquipmentPageComponent implements OnInit, OnDestroy {
   // Cancel pending booking
   cancelPendingBooking(bookingId: number): void {
     this.store.dispatch(EquipmentBookingActions.cancelBooking({ bookingId }));
+  }
+
+  // Alert popup methods
+  showAlert(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlertPopup = true;
+  }
+
+  closeAlert(): void {
+    this.showAlertPopup = false;
+    this.alertMessage = '';
   }
 
   // Helper methods

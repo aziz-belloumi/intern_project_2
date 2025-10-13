@@ -46,6 +46,9 @@ export class WebSocketListenerService{
               endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
             }));
             this.store.dispatch(BookingActions.loadPendingBookings({ userId: this.currentUserId }));
+            this.store.dispatch(BookingActions.loadUserBookings({ userId: this.currentUserId, lastBookingId: 0 }));
+            this.store.dispatch(BookingActions.loadUserStatistics({ userId: this.currentUserId }));
+            this.store.dispatch(BookingActions.loadUserRecentBookings({ userId: this.currentUserId }));
             console.log("📅 Booking change detected through WebSocket!");
           } else {
             console.warn('⚠️ Booking event received but userId is undefined.');

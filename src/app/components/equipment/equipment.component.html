@@ -64,7 +64,6 @@
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" [disabled]="!equipmentForm.valid">
-          <svg fill="currentColor" viewBox="0 0 24 24" *ngIf="!equipmentForm.valid" class="loading-icon" style="display: none;"></svg> <!-- Optional loading -->
           Add Equipment
         </button>
         <button type="button" class="btn btn-secondary" (click)="onCancel(equipmentForm)">Cancel</button>
@@ -76,7 +75,7 @@
 
   <!-- My Equipment -->
   <div class="my-equipment-container">
-    <div class="explore-header">
+    <div class="section-header">
       <h3 class="form-title">My Equipment</h3>
     </div>
 
@@ -114,11 +113,14 @@
 
   <hr class="section-divider" />
 
-  <!-- Filter/Search Section -->
-  <div class="filter-section">
-    <div class="explore-header">
-      <h3 class="form-title">Find Equipment</h3>
+  <!-- Available Equipment with Search/Filter -->
+  <div class="equipment-section">
+    <div class="section-header">
+      <h3 class="form-title">Available Equipment</h3>
+      <p class="form-description">Browse and book equipment from other users</p>
     </div>
+
+    <!-- Search and Filter -->
     <div class="filters-row">
       <div class="filter-group">
         <input
@@ -143,14 +145,8 @@
         </select>
       </div>
     </div>
-  </div>
 
-  <!-- Available Equipment -->
-  <div class="my-equipment-container">
-    <div class="explore-header">
-      <h3 class="form-title">Available Equipment</h3>
-    </div>
-
+    <!-- Equipment Grid -->
     <div *ngIf="filteredEquipment.length === 0" class="no-results">
       <svg class="no-results-icon" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -194,11 +190,9 @@
 
   <hr class="section-divider" />
 
-
-
   <!-- Pending Bookings -->
   <div class="bookings-container">
-    <div class="explore-header">
+    <div class="section-header">
       <h3 class="form-title">Pending Bookings</h3>
     </div>
 
@@ -266,6 +260,25 @@
         <button type="button" class="btn btn-secondary" (click)="closeBookingPopup()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="confirmBookingReservation()">Confirm Booking</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Alert Popup -->
+  <div class="popup-overlay" *ngIf="showAlertPopup" (click)="closeAlert()">
+    <div class="alert-popup" (click)="$event.stopPropagation()">
+      <div class="alert-icon" [ngClass]="alertType">
+        <svg *ngIf="alertType === 'success'" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+        <svg *ngIf="alertType === 'error'" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        <svg *ngIf="alertType === 'info'" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>
+      </div>
+      <p class="alert-message">{{ alertMessage }}</p>
+      <button class="btn btn-primary" (click)="closeAlert()">OK</button>
     </div>
   </div>
 </main>
